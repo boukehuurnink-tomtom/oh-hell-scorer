@@ -18,15 +18,14 @@ class OhHellGame:
     
     def _generate_round_sequence(self):
         """Generate the sequence of cards per round (up and down)."""
-        sequence = list(range(1, self.max_cards + 1))
-        sequence.extend(range(self.max_cards - 1, 0, -1))
-        return sequence
+        ascending = list(range(1, self.max_cards + 1))
+        descending = list(range(self.max_cards - 1, 0, -1))
+        return ascending + descending
     
     def get_current_hand_size(self):
         """Get the number of cards for the current round."""
-        if self.current_round_num - 1 < len(self.round_sequence):
-            return self.round_sequence[self.current_round_num - 1]
-        return None
+        round_index = self.current_round_num - 1
+        return self.round_sequence[round_index] if round_index < len(self.round_sequence) else None
     
     def get_current_dealer(self):
         """Get the current dealer's name."""
@@ -41,58 +40,79 @@ class OhHellGame:
             tricks: dict mapping player name to actual tricks won
             trump_suit: optional trump suit for the round (not used for scoring)
         """
+        self._validate_players(bids, tricks)
+        hand_size = self._validate_game_active()
+        self._validate_bids(bids, hand_size)
+        self._validate_tricks(tricks, hand_size)
+        self._validate_dealer_rule(bids, hand_size)
+        
+        round_scores = self._calculate_round_scores(bids, tricks)
+        self._record_round(hand_size, bids, tricks, round_scores)
+        self._advance_to_next_round()
+    
+    def _validate_players(self, bids, tricks):
+        """Ensure all players have bids and tricks."""
         if set(bids.keys()) != set(self.players) or set(tricks.keys()) != set(self.players):
             raise ValueError("All players must have bids and tricks")
-        
+    
+    def _validate_game_active(self):
+        """Check if game is still active and return current hand size."""
         hand_size = self.get_current_hand_size()
         if hand_size is None:
             raise ValueError("Game is complete")
-        
-        # Validate bids
+        return hand_size
+    
+    def _validate_bids(self, bids, hand_size):
+        """Validate that all bids are within valid range."""
         for player, bid in bids.items():
-            if bid < 0 or bid > hand_size:
+            if not 0 <= bid <= hand_size:
                 raise ValueError(f"Bid for {player} must be between 0 and {hand_size}")
-        
-        # Validate tricks
+    
+    def _validate_tricks(self, tricks, hand_size):
+        """Validate that tricks are within range and sum to hand size."""
         for player, trick in tricks.items():
-            if trick < 0 or trick > hand_size:
+            if not 0 <= trick <= hand_size:
                 raise ValueError(f"Tricks for {player} must be between 0 and {hand_size}")
         
-        # Validate total tricks equals hand size
-        if sum(tricks.values()) != hand_size:
-            raise ValueError(f"Total tricks must equal {hand_size}, got {sum(tricks.values())}")
-        
-        # Check "screw the dealer" rule
-        dealer = self.get_current_dealer()
+        total_tricks = sum(tricks.values())
+        if total_tricks != hand_size:
+            raise ValueError(f"Total tricks must equal {hand_size}, got {total_tricks}")
+    
+    def _validate_dealer_rule(self, bids, hand_size):
+        """Check 'screw the dealer' rule - total bids cannot equal hand size."""
         total_bids = sum(bids.values())
         if total_bids == hand_size:
+            dealer = self.get_current_dealer()
             raise ValueError(f"Invalid: Total bids cannot equal {hand_size} (Dealer {dealer} must bid differently)")
-        
+    
+    def _calculate_round_scores(self, bids, tricks):
+        """Calculate scores for all players in the round."""
         round_scores = {}
         for player in self.players:
             bid = bids[player]
             actual = tricks[player]
-            
-            # Calculate score: if bid matches actual, score = 10 + actual
-            # Otherwise, score = -(absolute difference)
-            if bid == actual:
-                score = 10 + actual
-            else:
-                score = -abs(bid - actual)
-            
-            round_scores[player] = score
-            self.scores[player] += score
-        
+            round_scores[player] = self._calculate_player_score(bid, actual)
+            self.scores[player] += round_scores[player]
+        return round_scores
+    
+    @staticmethod
+    def _calculate_player_score(bid, actual):
+        """Calculate score for a single player: 10 + actual if correct, -difference otherwise."""
+        return 10 + actual if bid == actual else -abs(bid - actual)
+    
+    def _record_round(self, hand_size, bids, tricks, round_scores):
+        """Record the round data."""
         self.rounds.append({
             'round_num': self.current_round_num,
             'hand_size': hand_size,
-            'dealer': dealer,
+            'dealer': self.get_current_dealer(),
             'bids': bids.copy(),
             'tricks': tricks.copy(),
             'round_scores': round_scores
         })
-        
-        # Move to next round
+    
+    def _advance_to_next_round(self):
+        """Move to the next round and rotate dealer."""
         self.current_round_num += 1
         self.dealer_index = (self.dealer_index + 1) % self.num_players
     
@@ -102,55 +122,46 @@ class OhHellGame:
     
     def print_scorecard(self):
         """Print a formatted scorecard."""
-        print("\n" + "="*80)
+        self._print_header()
+        self._print_rounds()
+        self._print_final_scores()
+    
+    def _print_header(self):
+        """Print scorecard header."""
+        print("\n" + "=" * 80)
         print("OH HELL SCORECARD")
-        print("="*80)
-        
-        # Header
-        header = f"{'Round':<8}"
-        for player in self.players:
-            header += f"{player:<15}"
-        print(header)
-        print("-"*80)
-        
-        # Each round
+        print("=" * 80)
+        print(f"{'Round':<8}" + "".join(f"{p:<15}" for p in self.players))
+        print("-" * 80)
+    
+    def _print_rounds(self):
+        """Print all rounds with bids, tricks, and scores."""
         for i, round_data in enumerate(self.rounds, 1):
-            # Bid row
-            bid_row = f"R{i} Bid:  "
-            for player in self.players:
-                bid_row += f"{round_data['bids'][player]:<15}"
-            print(bid_row)
-            
-            # Tricks row
-            tricks_row = f"R{i} Won:  "
-            for player in self.players:
-                tricks_row += f"{round_data['tricks'][player]:<15}"
-            print(tricks_row)
-            
-            # Score row
-            score_row = f"R{i} Pts:  "
-            for player in self.players:
-                score = round_data['round_scores'][player]
-                score_row += f"{score:+<15}"
-            print(score_row)
-            
-            # Cumulative after this round
-            cumulative_row = f"Total:    "
-            running_totals = {p: 0 for p in self.players}
-            for j in range(i):
-                for player in self.players:
-                    running_totals[player] += self.rounds[j]['round_scores'][player]
-            
-            for player in self.players:
-                cumulative_row += f"{running_totals[player]:<15}"
-            print(cumulative_row)
-            print("-"*80)
+            self._print_round(i, round_data)
+    
+    def _print_round(self, round_num, round_data):
+        """Print a single round's data."""
+        print(f"R{round_num} Bid:  " + "".join(f"{round_data['bids'][p]:<15}" for p in self.players))
+        print(f"R{round_num} Won:  " + "".join(f"{round_data['tricks'][p]:<15}" for p in self.players))
+        print(f"R{round_num} Pts:  " + "".join(f"{round_data['round_scores'][p]:+<15}" for p in self.players))
         
-        # Final scores
+        running_totals = self._calculate_running_totals(round_num)
+        print(f"Total:    " + "".join(f"{running_totals[p]:<15}" for p in self.players))
+        print("-" * 80)
+    
+    def _calculate_running_totals(self, up_to_round):
+        """Calculate running totals up to a specific round."""
+        return {
+            player: sum(self.rounds[j]['round_scores'][player] for j in range(up_to_round))
+            for player in self.players
+        }
+    
+    def _print_final_scores(self):
+        """Print final scores."""
         print(f"\n{'FINAL SCORES':<8}")
         for player in self.players:
             print(f"{player}: {self.scores[player]}")
-        print("="*80 + "\n")
+        print("=" * 80 + "\n")
 
 
 def main():

@@ -13,28 +13,29 @@ app.secret_key = secrets.token_hex(16)
 # Store games in memory (in production, use a database)
 games = {}
 
+MIN_PLAYERS = 3
+MAX_PLAYERS = 7
+
+
 @app.route('/')
 def index():
+    """Render the main game page."""
     return render_template('index.html')
+
 
 @app.route('/api/new_game', methods=['POST'])
 def new_game():
-    data = request.json
-    players = data.get('players', [])
+    """Create a new game with the specified players."""
+    players = request.json.get('players', [])
     
-    if len(players) < 3:
-        return jsonify({'error': 'Need at least 3 players for Oh Hell'}), 400
+    if error := _validate_player_count(players):
+        return jsonify({'error': error}), 400
     
-    if len(players) > 7:
-        return jsonify({'error': 'Maximum 7 players for Oh Hell'}), 400
-    
-    game_id = secrets.token_hex(8)
-    games[game_id] = OhHellGame(players)
-    session['game_id'] = game_id
-    
+    game_id = _create_game(players)
     game = games[game_id]
+    
     return jsonify({
-        'game_id': game_id, 
+        'game_id': game_id,
         'players': players,
         'max_cards': game.max_cards,
         'total_rounds': len(game.round_sequence),
@@ -42,19 +43,20 @@ def new_game():
         'dealer': game.get_current_dealer()
     })
 
+
 @app.route('/api/add_round', methods=['POST'])
 def add_round():
-    game_id = session.get('game_id')
-    if not game_id or game_id not in games:
-        return jsonify({'error': 'No active game'}), 400
+    """Add a completed round to the current game."""
+    game = _get_current_game()
+    if isinstance(game, tuple):  # Error response
+        return game
     
     data = request.json
     bids = data.get('bids', {})
     tricks = data.get('tricks', {})
     
     try:
-        games[game_id].add_round(bids, tricks)
-        game = games[game_id]
+        game.add_round(bids, tricks)
         hand_size = game.get_current_hand_size()
         
         return jsonify({
@@ -68,13 +70,14 @@ def add_round():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
+
 @app.route('/api/game_state', methods=['GET'])
 def game_state():
-    game_id = session.get('game_id')
-    if not game_id or game_id not in games:
-        return jsonify({'error': 'No active game'}), 400
+    """Get the current state of the active game."""
+    game = _get_current_game()
+    if isinstance(game, tuple):  # Error response
+        return game
     
-    game = games[game_id]
     hand_size = game.get_current_hand_size()
     
     return jsonify({
@@ -89,20 +92,53 @@ def game_state():
         'game_complete': hand_size is None
     })
 
+
 @app.route('/api/reset', methods=['POST'])
 def reset():
+    """Reset the current game."""
     game_id = session.get('game_id')
     if game_id and game_id in games:
         del games[game_id]
     session.pop('game_id', None)
     return jsonify({'success': True})
 
-if __name__ == '__main__':
-    print("\n" + "="*60)
+
+def _validate_player_count(players):
+    """Validate that player count is within acceptable range."""
+    if len(players) < MIN_PLAYERS:
+        return f'Need at least {MIN_PLAYERS} players for Oh Hell'
+    if len(players) > MAX_PLAYERS:
+        return f'Maximum {MAX_PLAYERS} players for Oh Hell'
+    return None
+
+
+def _create_game(players):
+    """Create a new game and store it in the session."""
+    game_id = secrets.token_hex(8)
+    games[game_id] = OhHellGame(players)
+    session['game_id'] = game_id
+    return game_id
+
+
+def _get_current_game():
+    """Retrieve the current game from the session or return error."""
+    game_id = session.get('game_id')
+    if not game_id or game_id not in games:
+        return jsonify({'error': 'No active game'}), 400
+    return games[game_id]
+
+
+def _print_startup_message():
+    """Print server startup information."""
+    print("\n" + "=" * 60)
     print("Oh Hell Score Recorder")
-    print("="*60)
+    print("=" * 60)
     print("\nStarting web server...")
     print("Open your browser to: http://127.0.0.1:8888")
     print("\nPress Ctrl+C to stop the server")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
+
+
+if __name__ == '__main__':
+    _print_startup_message()
     app.run(debug=False, host='127.0.0.1', port=8888)
