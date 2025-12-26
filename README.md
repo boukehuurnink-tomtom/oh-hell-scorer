@@ -20,10 +20,10 @@ Each round:
 4. **Playing Phase**: Standard trick-taking (must follow suit, trump wins, etc.)
 
 ### Scoring (this app's variant)
-- **Made bid exactly**: Score = 10 + number of tricks bid
+- **Made bid exactly**: Score = 5 + number of tricks bid
 - **Failed bid**: Score = -(absolute difference between bid and actual)
 
-Example: Bid 3, won 3 → +13 points | Bid 2, won 4 → -2 points
+Example: Bid 3, won 3 → +8 points | Bid 2, won 4 → -2 points
 
 ## Features Implemented
 
@@ -73,12 +73,12 @@ Example: Bid 3, won 3 → +13 points | Bid 2, won 4 → -2 points
 
 ```
 Round 1:
-- Alice bids 3, wins 3 → Score: 10 + 3 = 13
+- Alice bids 3, wins 3 → Score: 5 + 3 = 8
 - Bob bids 2, wins 4 → Score: -(4 - 2) = -2
 
 Round 2:
-- Alice bids 2, wins 1 → Score: -(2 - 1) = -1 (Total: 12)
-- Bob bids 3, wins 3 → Score: 10 + 3 = 13 (Total: 11)
+- Alice bids 2, wins 1 → Score: -(2 - 1) = -1 (Total: 7)
+- Bob bids 3, wins 3 → Score: 5 + 3 = 8 (Total: 6)
 ```
 
 ## Features

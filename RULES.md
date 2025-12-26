@@ -52,9 +52,9 @@ Example with 4 players:
    - Winner of each trick leads the next trick
 
 5. **Scoring**
-   - **Made Bid Exactly**: 10 + (number of tricks bid)
-     - Bid 0, won 0: 10 points
-     - Bid 3, won 3: 13 points
+   - **Made Bid Exactly**: 5 + (number of tricks bid)
+     - Bid 0, won 0: 5 points
+     - Bid 3, won 3: 8 points
    - **Failed Bid**: -(absolute difference)
      - Bid 2, won 4: -2 points
      - Bid 3, won 0: -3 points
@@ -72,9 +72,10 @@ Player with the highest total score after all rounds wins!
 ## Variations
 
 ### Scoring Variations
-1. **This app uses**: Made = 10 + bid, Failed = -difference
-2. **Alternative**: Made = 10 + (bid × 2), Failed = 0
-3. **British variant**: Made = (bid × 2) + 10, Failed = -5
+1. **This app uses**: Made = 5 + bid, Failed = -difference
+2. **Alternative**: Made = 10 + bid, Failed = -difference
+3. **Another variant**: Made = 10 + (bid × 2), Failed = 0
+4. **British variant**: Made = (bid × 2) + 10, Failed = -5
 
 ### Rule Variations
 1. **No "screw the dealer"**: Dealer can bid anything

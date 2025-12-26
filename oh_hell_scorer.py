@@ -97,8 +97,8 @@ class OhHellGame:
     
     @staticmethod
     def _calculate_player_score(bid, actual):
-        """Calculate score for a single player: 10 + actual if correct, -difference otherwise."""
-        return 10 + actual if bid == actual else -abs(bid - actual)
+        """Calculate score for a single player: 5 + actual if correct, -difference otherwise."""
+        return 5 + actual if bid == actual else -abs(bid - actual)
     
     def _record_round(self, hand_size, bids, tricks, round_scores):
         """Record the round data."""

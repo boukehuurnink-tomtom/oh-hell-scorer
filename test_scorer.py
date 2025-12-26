@@ -21,7 +21,7 @@ def test_game():
     
     print("After Round 1 (1 card):")
     print(game.get_current_scores())
-    # Expected: Alice=11 (10+1), Bob=10 (10+0), Carol=-1 (bid 1, won 0)
+    # Expected: Alice=6 (5+1), Bob=5 (5+0), Carol=-1 (bid 1, won 0)
     
     # Round 2 (2 cards): Dealer is Bob. Bids can't total 2.
     game.add_round(
