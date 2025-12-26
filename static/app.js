@@ -11,6 +11,55 @@ const gameState = {
 const MIN_PLAYERS = 3;
 const MAX_PLAYERS = 7;
 
+// Initialize app on page load
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('player-name-input');
+    if (input) {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addPlayer();
+        });
+    }
+    
+    // Try to restore game state on page load
+    restoreGameState();
+});
+
+// Save game state to localStorage
+function saveGameState() {
+    localStorage.setItem('ohHellGameState', JSON.stringify(gameState));
+}
+
+// Restore game state from localStorage
+async function restoreGameState() {
+    try {
+        const data = await fetchApi('/api/game_state');
+        
+        if (data.players && data.players.length > 0) {
+            // Server has an active game
+            gameState.players = data.players;
+            gameState.currentRound = data.current_round;
+            gameState.handSize = data.hand_size;
+            gameState.dealer = data.dealer;
+            gameState.totalRounds = data.total_rounds;
+            gameState.maxCards = data.max_cards;
+            
+            if (data.hand_size !== null) {
+                // Game is active, show game screen
+                switchScreen('setup-screen', 'game-screen');
+                setupRoundInputs();
+                updateGameInfo();
+                updateScorecard();
+            } else if (data.rounds && data.rounds.length > 0) {
+                // Game is complete, show game screen with results
+                switchScreen('setup-screen', 'game-screen');
+                updateScorecard();
+            }
+        }
+    } catch (error) {
+        console.log('No active game to restore');
+    }
+}
+
 // Setup Screen Functions
 function addPlayer() {
     const input = document.getElementById('player-name-input');
@@ -33,16 +82,6 @@ function addPlayer() {
     input.value = '';
     input.focus();
 }
-
-// Allow Enter key to add player
-document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('player-name-input');
-    if (input) {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') addPlayer();
-        });
-    }
-});
 
 function removePlayer(name) {
     gameState.players = gameState.players.filter(p => p !== name);
@@ -347,12 +386,28 @@ async function resetGame() {
     
     try {
         await fetchApi('/api/reset', {});
+        
+        // Clear local game state
         gameState.players = [];
         gameState.currentRound = 1;
+        gameState.handSize = 0;
+        gameState.dealer = '';
+        gameState.totalRounds = 0;
+        gameState.maxCards = 0;
+        
+        // Show setup screen again
         switchScreen('game-screen', 'setup-screen');
         document.getElementById('player-list').innerHTML = '';
         document.getElementById('player-name-input').value = '';
         document.getElementById('start-game-btn').disabled = true;
+        
+        // Show the input cards again in case they were hidden (game complete)
+        const bidCard = document.querySelector('.card:has(#bid-inputs)');
+        const trickCard = document.querySelector('.card:has(#trick-inputs)');
+        const submitBtn = document.querySelector('.btn-primary');
+        if (bidCard) bidCard.style.display = '';
+        if (trickCard) trickCard.style.display = '';
+        if (submitBtn) submitBtn.style.display = '';
     } catch (error) {
         console.error('Error resetting game:', error);
     }
