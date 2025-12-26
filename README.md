@@ -36,7 +36,8 @@ Example: Bid 3, won 3 → +8 points | Bid 2, won 4 → -2 points
 ✅ **Trick validation** - total tricks must equal hand size  
 ✅ **Auto-complete detection** - knows when game ends  
 ✅ **Visual dealer indicator** - highlights current dealer  
-✅ **Live warnings** - alerts if dealer rule violated
+✅ **Live warnings** - alerts if dealer rule violated  
+✅ **Game state persistence** - survives browser refresh (session-based)
 
 ## Quick Start
 
@@ -68,6 +69,8 @@ Example: Bid 3, won 3 → +8 points | Bid 2, won 4 → -2 points
    - Enter actual tricks won
    - Click "Submit Round"
 4. **View Scores**: Scorecard updates automatically showing all rounds and totals
+5. **Game Persistence**: Your game is automatically saved - refresh the page anytime and continue where you left off
+6. **New Game**: Click "New Game" button to start fresh (this will clear the current game)
 
 ## Example Scoring
 
@@ -88,4 +91,5 @@ Round 2:
 🎯 Real-time score calculation  
 📊 Live scorecard with complete game history  
 🎨 Color-coded positive/negative scores  
+💾 Automatic game state persistence  
 🔄 Easy game reset to start new games
