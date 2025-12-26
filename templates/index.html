@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oh Hell Score Recorder</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🃏 Oh Hell Score Recorder</h1>
+            <p class="subtitle">Track your game scores easily</p>
+        </header>
+
+        <!-- Setup Screen -->
+        <div id="setup-screen" class="screen active">
+            <div class="card">
+                <h2>Setup New Game</h2>
+                <div class="player-input">
+                    <div id="player-list"></div>
+                    <div class="input-group">
+                        <input type="text" id="player-name-input" placeholder="Enter player name" />
+                        <button onclick="addPlayer()" class="btn btn-secondary">Add Player</button>
+                    </div>
+                </div>
+                <button onclick="startGame()" class="btn btn-primary" id="start-game-btn" disabled>Start Game</button>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <button onclick="resetGame()" class="btn btn-small">New Game</button>
+                <div id="round-info">
+                    <h2>Round <span id="round-number">1</span> of <span id="total-rounds">0</span></h2>
+                    <p class="game-info">
+                        Cards: <span id="hand-size">0</span> | 
+                        Dealer: <span id="dealer-name"></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Enter Bids</h3>
+                <p class="rules-hint">Each player bids 0 to <span id="bid-max">0</span> tricks. Dealer bids last!</p>
+                <div id="dealer-warning" class="warning" style="display:none;"></div>
+                <div id="bid-inputs"></div>
+            </div>
+
+            <div class="card">
+                <h3>Enter Tricks Won</h3>
+                <p class="rules-hint">Total tricks must equal <span id="tricks-total">0</span>. Current total: <span id="tricks-current">0</span></p>
+                <div id="trick-inputs"></div>
+            </div>
+
+            <button onclick="submitRound()" class="btn btn-primary">Submit Round</button>
+
+            <!-- Scorecard -->
+            <div class="card scorecard">
+                <h2>Scorecard</h2>
+                <div id="scorecard-table"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
