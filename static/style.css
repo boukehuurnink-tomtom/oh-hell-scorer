@@ -72,7 +72,6 @@ header h1 {
     padding: 24px;
     margin-bottom: 16px;
 }
-}
 
 .card h2 {
     font-size: 1.125rem;
@@ -368,8 +367,6 @@ select:focus {
 .dealer-cell {
     background: #f9fafb !important;
     font-weight: 500;
-}
-    transition: border-color 0.3s;
 }
 
 select:focus {
