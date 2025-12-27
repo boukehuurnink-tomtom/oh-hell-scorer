@@ -379,6 +379,7 @@ select:focus {
     display: table;
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* Force equal column widths */
 }
 
 .grid-row {
@@ -397,7 +398,7 @@ select:focus {
     color: #6b7280;
     text-align: right;
     vertical-align: middle;
-    width: 80px;
+    width: 100px; /* Fixed width for labels */
 }
 
 .grid-cell {
@@ -407,12 +408,11 @@ select:focus {
     border: 1px solid #e5e7eb;
     vertical-align: middle;
     font-size: 0.875rem;
-    width: auto;
 }
 
 /* Equal widths for all player columns */
 .grid-cell:not(.grid-label) {
-    width: 1%;
+    width: auto; /* Let table-layout: fixed handle equal widths */
 }
 
 .grid-player {
