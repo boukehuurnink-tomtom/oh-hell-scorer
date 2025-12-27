@@ -276,9 +276,9 @@ select:focus {
 }
 
 .current-scores {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 8px;
-    flex-wrap: wrap;
     padding: 16px;
     background: #f9fafb;
     border: 1px solid #e5e7eb;
@@ -288,11 +288,9 @@ select:focus {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 12px;
     background: white;
     border: 1px solid #e5e7eb;
-    flex: 1;
-    min-width: 120px;
 }
 
 .score-item.dealer {
@@ -305,6 +303,7 @@ select:focus {
     font-size: 0.875rem;
     color: #1a1a1a;
     flex: 1;
+    word-wrap: break-word;
 }
 
 .score-value {
@@ -411,6 +410,12 @@ select:focus {
     border: 1px solid #e5e7eb;
     vertical-align: middle;
     font-size: 0.875rem;
+    width: auto;
+}
+
+/* Equal widths for all player columns */
+.grid-cell:not(.grid-label) {
+    width: 1%;
 }
 
 .grid-player {
@@ -418,12 +423,16 @@ select:focus {
     color: #1a1a1a;
     background: #f9fafb;
     padding: 12px 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .grid-player .dealer-badge {
     display: block;
     font-size: 0.6875rem;
     margin-top: 4px;
+    color: #dc2626;
+    font-weight: 600;
 }
 
 .grid-input-row .grid-cell {
@@ -488,6 +497,19 @@ th, td {
     border-bottom: 1px solid #e5e7eb;
 }
 
+/* Equal width for all player columns in scorecard */
+th:not(:first-child),
+td:not(:first-child) {
+    width: 1%;
+}
+
+th:first-child,
+td:first-child {
+    text-align: left;
+    padding-left: 12px;
+    min-width: 120px;
+}
+
 th {
     background: #f9fafb;
     font-weight: 500;
@@ -546,6 +568,10 @@ tbody tr:nth-child(4n) {
         font-size: 14px;
     }
     
+    .container {
+        padding: 12px;
+    }
+    
     .logo {
         width: 56px;
         height: 56px;
@@ -553,6 +579,11 @@ tbody tr:nth-child(4n) {
     
     .header-content {
         gap: 16px;
+    }
+    
+    header {
+        padding: 24px 0;
+        margin-bottom: 24px;
     }
     
     header h1 {
@@ -564,16 +595,207 @@ tbody tr:nth-child(4n) {
     }
     
     .card {
-        padding: 16px;
+        padding: 12px;
+    }
+    
+    .card h2 {
+        font-size: 1.125rem;
+        margin-bottom: 12px;
     }
     
     .input-group {
         flex-direction: column;
     }
     
-    th, td {
-        padding: 8px 4px;
+    /* Equal width columns for round input grid */
+    .round-grid {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .grid-row {
+        display: flex;
+        width: 100%;
+    }
+    
+    .grid-label {
+        flex: 0 0 60px;
+        width: 60px;
+        padding: 8px 8px 8px 0;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    
+    .grid-cell {
+        flex: 1;
+        min-width: 0;
+        padding: 6px 4px;
         font-size: 0.8125rem;
+    }
+    
+    .grid-player {
+        padding: 10px 4px;
+        font-size: 0.8125rem;
+        word-break: break-word;
+    }
+    
+    .grid-player .dealer-badge {
+        font-size: 0.625rem;
+        margin-top: 2px;
+    }
+    
+    .grid-input {
+        padding: 6px 4px;
+        font-size: 0.875rem;
+    }
+    
+    /* Equal width columns for scorecard table */
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    thead, tbody, tr {
+        display: block;
+        width: 100%;
+    }
+    
+    tr {
+        display: flex;
+        width: 100%;
+    }
+    
+    th:first-child,
+    td:first-child {
+        flex: 0 0 100px;
+        width: 100px;
+        text-align: left;
+        padding-left: 8px;
+        font-size: 0.75rem;
+    }
+    
+    th:not(:first-child),
+    td:not(:first-child) {
+        flex: 1;
+        min-width: 0;
+        padding: 8px 4px;
+        font-size: 0.75rem;
+    }
+    
+    /* Current scores mobile optimization */
+    .current-scores-container {
+        margin-top: 16px;
+    }
+    
+    .current-scores-label {
+        font-size: 0.875rem;
+        margin-bottom: 8px;
+    }
+    
+    .current-scores {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 8px;
+    }
+    
+    .score-item {
+        padding: 10px;
+    }
+    
+    .score-player {
+        font-size: 0.8125rem;
+    }
+    
+    .score-value {
+        font-size: 1.125rem;
+    }
+    
+    /* Button optimizations */
+    .btn {
+        padding: 12px 16px;
+        font-size: 0.9375rem;
+    }
+    
+    .btn-small {
+        padding: 8px 12px;
+        font-size: 0.8125rem;
+    }
+    
+    /* History items mobile */
+    .history-item {
+        padding: 12px;
+    }
+    
+    .history-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        font-size: 0.8125rem;
+    }
+    
+    .history-players {
+        font-size: 0.75rem;
+    }
+    
+    .history-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .history-actions button {
+        width: 100%;
+    }
+    
+    /* Flame divider mobile */
+    .flame-divider {
+        margin: 16px 0;
+    }
+}
+
+/* Tablet optimization (601px - 900px) */
+@media (min-width: 601px) and (max-width: 900px) {
+    .container {
+        padding: 16px;
+    }
+    
+    /* Equal width for 4-7 players on tablet */
+    .grid-cell {
+        min-width: 80px;
+    }
+    
+    th:not(:first-child),
+    td:not(:first-child) {
+        min-width: 80px;
+    }
+}
+
+/* Very small screens (< 360px) */
+@media (max-width: 359px) {
+    header h1 {
+        font-size: 1.125rem;
+    }
+    
+    .grid-label {
+        flex: 0 0 50px;
+        width: 50px;
+        font-size: 0.6875rem;
+    }
+    
+    .grid-player {
+        font-size: 0.75rem;
+    }
+    
+    th:first-child,
+    td:first-child {
+        flex: 0 0 80px;
+        width: 80px;
+        font-size: 0.6875rem;
     }
 }
 
