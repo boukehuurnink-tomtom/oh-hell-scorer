@@ -443,6 +443,21 @@ tr:hover {
     font-weight: 500;
 }
 
+/* Distinguish cumulative row from score row */
+tr:has(td em:first-child) {
+    font-style: italic;
+}
+
+tr:has(strong:first-child) td:first-child {
+    font-weight: 600;
+}
+
+/* Cumulative total rows - slightly emphasized */
+tbody tr:nth-child(4n) {
+    background: #fafafa;
+    font-weight: 500;
+}
+
 /* Mobile Responsive */
 @media (max-width: 600px) {
     body {

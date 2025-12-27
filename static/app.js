@@ -383,12 +383,25 @@ function buildTableHeader(players) {
 }
 
 function buildTableBody(data) {
-    const rounds = data.rounds.map(round => buildRoundRows(round, data.players)).join('');
+    // Calculate cumulative scores for each round
+    const cumulativeScores = {};
+    data.players.forEach(player => {
+        cumulativeScores[player] = [];
+        let runningTotal = 0;
+        data.rounds.forEach(round => {
+            runningTotal += round.round_scores[player];
+            cumulativeScores[player].push(runningTotal);
+        });
+    });
+    
+    const rounds = data.rounds.map((round, index) => 
+        buildRoundRows(round, data.players, cumulativeScores, index)
+    ).join('');
     const totals = buildTotalRow(data.players, data.scores);
     return rounds + totals;
 }
 
-function buildRoundRows(round, players) {
+function buildRoundRows(round, players, cumulativeScores, roundIndex) {
     const bidRow = buildRow(`R${round.round_num} (${round.hand_size} cards)`, players, 
         p => round.bids[p] + (p === round.dealer ? ' 🂠' : ''), 
         p => p === round.dealer);
@@ -398,15 +411,13 @@ function buildRoundRows(round, players) {
         null, 
         p => round.round_scores[p] >= 0 ? 'positive-score' : 'negative-score');
     
-    // Calculate cumulative scores up to this round
-    const cumulativeRow = buildCumulativeRow(round.round_num, players);
+    // Add cumulative row showing running total
+    const cumulativeRow = buildRow('<em>Total</em>', players,
+        p => cumulativeScores[p][roundIndex],
+        null,
+        p => cumulativeScores[p][roundIndex] >= 0 ? 'positive-score' : 'negative-score');
     
     return bidRow + wonRow + scoreRow + cumulativeRow;
-}
-
-function buildCumulativeRow(roundNum, players) {
-    // This will be populated with cumulative data from the game state
-    return ''; // Cumulative is shown in total row
 }
 
 function buildRow(label, players, valueFunc, highlightFunc = null, classFunc = null) {
