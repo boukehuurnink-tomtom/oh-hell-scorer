@@ -260,6 +260,61 @@ select:focus {
     border-bottom: 1px solid #e5e7eb;
 }
 
+/* Current Scores Display */
+.current-scores-container {
+    margin-bottom: 20px;
+}
+
+.current-scores {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+}
+
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    flex: 1;
+    min-width: 120px;
+}
+
+.score-item.dealer {
+    border-color: #1a1a1a;
+    border-width: 2px;
+}
+
+.score-player {
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #1a1a1a;
+    flex: 1;
+}
+
+.score-value {
+    font-weight: 600;
+    font-size: 1.125rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.score-value.positive {
+    color: #059669;
+}
+
+.score-value.negative {
+    color: #dc2626;
+}
+
+.score-value.zero {
+    color: #6b7280;
+}
+
 #round-info {
     text-align: right;
 }

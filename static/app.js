@@ -48,11 +48,13 @@ async function restoreGameState() {
                 switchScreen('setup-screen', 'game-screen');
                 setupRoundInputs();
                 updateGameInfo();
+                updateCurrentScores();
                 updateScorecard();
                 updateUndoButton();
             } else if (data.rounds && data.rounds.length > 0) {
                 // Game is complete, show game screen with results
                 switchScreen('setup-screen', 'game-screen');
+                updateCurrentScores();
                 updateScorecard();
                 updateUndoButton();
             }
@@ -127,6 +129,7 @@ async function startGame() {
         switchScreen('setup-screen', 'game-screen');
         setupRoundInputs();
         updateGameInfo();
+        updateCurrentScores();
         updateScorecard();
     } catch (error) {
         alert('Error starting game: ' + error.message);
@@ -168,6 +171,40 @@ function updateGameInfo() {
     document.getElementById('bid-max').textContent = gameState.handSize;
     document.getElementById('tricks-total').textContent = gameState.handSize;
     document.getElementById('tricks-equal').textContent = gameState.handSize;
+}
+
+async function updateCurrentScores() {
+    try {
+        const data = await fetchApi('/api/game_state');
+        const scoresContainer = document.getElementById('current-scores');
+        
+        if (!data.scores) {
+            scoresContainer.innerHTML = '';
+            return;
+        }
+        
+        // Create score items for each player
+        const scoreItems = gameState.players.map(player => {
+            const score = data.scores[player] || 0;
+            const isDealer = player === gameState.dealer;
+            const dealerClass = isDealer ? ' dealer' : '';
+            
+            let scoreClass = 'zero';
+            if (score > 0) scoreClass = 'positive';
+            if (score < 0) scoreClass = 'negative';
+            
+            return `
+                <div class="score-item${dealerClass}">
+                    <span class="score-player">${escapeHtml(player)}</span>
+                    <span class="score-value ${scoreClass}">${score}</span>
+                </div>
+            `;
+        }).join('');
+        
+        scoresContainer.innerHTML = scoreItems;
+    } catch (error) {
+        console.error('Error updating current scores:', error);
+    }
 }
 
 function setupRoundInputs() {
@@ -257,6 +294,7 @@ async function submitRound() {
             handleNextRound(data);
         }
         
+        updateCurrentScores();
         updateScorecard();
         updateUndoButton();
     } catch (error) {
@@ -458,6 +496,7 @@ async function undoLastRound() {
         
         // Update UI
         updateGameInfo();
+        updateCurrentScores();
         updateScorecard();
         updateUndoButton();
         
