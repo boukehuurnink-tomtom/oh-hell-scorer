@@ -293,7 +293,75 @@ select:focus {
 
 select:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #1a1a1a;
+}
+
+/* Round Input Grid */
+.round-grid {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.grid-row {
+    display: table-row;
+}
+
+.grid-header {
+    font-weight: 500;
+}
+
+.grid-label {
+    display: table-cell;
+    padding: 12px 16px 12px 0;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-align: right;
+    vertical-align: middle;
+    width: 80px;
+}
+
+.grid-cell {
+    display: table-cell;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #e5e7eb;
+    vertical-align: middle;
+    font-size: 0.875rem;
+}
+
+.grid-player {
+    font-weight: 500;
+    color: #1a1a1a;
+    background: #f9fafb;
+    padding: 12px 8px;
+}
+
+.grid-player .dealer-badge {
+    display: block;
+    font-size: 0.6875rem;
+    margin-top: 4px;
+}
+
+.grid-input-row .grid-cell {
+    padding: 4px;
+    background: white;
+}
+
+.grid-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 0.9375rem;
+    text-align: center;
+    font-family: inherit;
+    background: white;
+}
+
+.grid-input:focus {
+    outline: none;
+    border-color: #1a1a1a;
 }
 
 .input-row {

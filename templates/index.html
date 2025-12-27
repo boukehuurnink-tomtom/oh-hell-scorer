@@ -56,16 +56,11 @@
             </div>
 
             <div class="card">
-                <h3>Enter Bids</h3>
-                <p class="rules-hint">Each player bids 0 to <span id="bid-max">0</span> tricks. Dealer bids last!</p>
+                <h3>Enter Round Data</h3>
+                <p class="rules-hint">Bids: 0 to <span id="bid-max">0</span> tricks (total cannot equal <span id="tricks-total">0</span>). Tricks: total must equal <span id="tricks-equal">0</span>.</p>
                 <div id="dealer-warning" class="warning" style="display:none;"></div>
-                <div id="bid-inputs"></div>
+                <div id="round-input-grid"></div>
             </div>
-
-            <div class="card">
-                <h3>Enter Tricks Won</h3>
-                <p class="rules-hint">Total tricks must equal <span id="tricks-total">0</span>. Current total: <span id="tricks-current">0</span></p>
-                <div id="trick-inputs"></div>
             </div>
 
             <button onclick="submitRound()" class="btn btn-primary">Submit Round</button>

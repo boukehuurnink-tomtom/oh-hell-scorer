@@ -166,41 +166,71 @@ function updateGameInfo() {
     document.getElementById('dealer-name').textContent = gameState.dealer;
     document.getElementById('total-rounds').textContent = gameState.totalRounds;
     document.getElementById('bid-max').textContent = gameState.handSize;
-    
-    // Highlight dealer
-    gameState.players.forEach(player => {
-        const safeId = getSafeId(player);
-        const bidInput = document.getElementById(`bid-${safeId}`);
-        if (bidInput?.previousElementSibling) {
-            bidInput.previousElementSibling.innerHTML = player === gameState.dealer
-                ? `${escapeHtml(player)} <span class="dealer-badge">(DEALER)</span>`
-                : escapeHtml(player);
-        }
-    });
+    document.getElementById('tricks-total').textContent = gameState.handSize;
+    document.getElementById('tricks-equal').textContent = gameState.handSize;
 }
 
 function setupRoundInputs() {
-    const bidInputs = document.getElementById('bid-inputs');
-    const trickInputs = document.getElementById('trick-inputs');
+    const gridContainer = document.getElementById('round-input-grid');
     
-    bidInputs.innerHTML = gameState.players.map(player => createInputRow(player, 'bid')).join('');
-    trickInputs.innerHTML = gameState.players.map(player => createInputRow(player, 'trick')).join('');
+    // Create the grid layout
+    let gridHTML = '<div class="round-grid">';
+    
+    // Header row with player names
+    gridHTML += '<div class="grid-row grid-header">';
+    gridHTML += '<div class="grid-label"></div>'; // Empty corner
+    gameState.players.forEach(player => {
+        const isDealer = player === gameState.dealer;
+        const dealerBadge = isDealer ? '<span class="dealer-badge">DEALER</span>' : '';
+        gridHTML += `<div class="grid-cell grid-player">${escapeHtml(player)}${dealerBadge}</div>`;
+    });
+    gridHTML += '</div>';
+    
+    // Bid row (read-only display, filled after submission)
+    gridHTML += '<div class="grid-row">';
+    gridHTML += '<div class="grid-label">Bid</div>';
+    gameState.players.forEach(player => {
+        const safeId = getSafeId(player);
+        gridHTML += `<div class="grid-cell" id="bid-display-${safeId}">—</div>`;
+    });
+    gridHTML += '</div>';
+    
+    // Tricks row (read-only display, filled after submission)
+    gridHTML += '<div class="grid-row">';
+    gridHTML += '<div class="grid-label">Won</div>';
+    gameState.players.forEach(player => {
+        const safeId = getSafeId(player);
+        gridHTML += `<div class="grid-cell" id="trick-display-${safeId}">—</div>`;
+    });
+    gridHTML += '</div>';
+    
+    // Input row for bids
+    gridHTML += '<div class="grid-row grid-input-row">';
+    gridHTML += '<div class="grid-label">Bid →</div>';
+    gameState.players.forEach(player => {
+        const safeId = getSafeId(player);
+        gridHTML += `<div class="grid-cell"><input type="number" id="bid-${safeId}" min="0" max="${gameState.handSize}" placeholder="0" class="grid-input" /></div>`;
+    });
+    gridHTML += '</div>';
+    
+    // Input row for tricks
+    gridHTML += '<div class="grid-row grid-input-row">';
+    gridHTML += '<div class="grid-label">Won →</div>';
+    gameState.players.forEach(player => {
+        const safeId = getSafeId(player);
+        gridHTML += `<div class="grid-cell"><input type="number" id="trick-${safeId}" min="0" max="${gameState.handSize}" placeholder="0" class="grid-input" /></div>`;
+    });
+    gridHTML += '</div>';
+    
+    gridHTML += '</div>';
+    
+    gridContainer.innerHTML = gridHTML;
     
     // Add validation to prevent "screw the dealer"
     gameState.players.forEach(player => {
         const bidInput = document.getElementById(`bid-${getSafeId(player)}`);
         bidInput?.addEventListener('input', checkDealerRule);
     });
-}
-
-function createInputRow(player, type) {
-    const safeId = getSafeId(player);
-    return `
-        <div class="input-row">
-            <label>${escapeHtml(player)}</label>
-            <input type="number" id="${type}-${safeId}" min="0" max="${gameState.handSize}" placeholder="0-${gameState.handSize}" />
-        </div>
-    `;
 }
 
 function checkDealerRule() {
@@ -308,14 +338,17 @@ function clearInputs() {
         if (bidInput) {
             bidInput.value = '';
             bidInput.max = gameState.handSize;
-            bidInput.placeholder = `0-${gameState.handSize}`;
+            bidInput.placeholder = '0';
         }
         if (trickInput) {
             trickInput.value = '';
             trickInput.max = gameState.handSize;
-            trickInput.placeholder = `0-${gameState.handSize}`;
+            trickInput.placeholder = '0';
         }
     });
+    
+    // Also need to regenerate the grid to update dealer badge
+    setupRoundInputs();
 }
 
 function focusFirstInput() {
