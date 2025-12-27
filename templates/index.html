@@ -61,12 +61,6 @@
                 </div>
             </div>
 
-            <!-- Current Scores Display -->
-            <div class="current-scores-container">
-                <h3 class="current-scores-label">Current Standings</h3>
-                <div id="current-scores" class="current-scores"></div>
-            </div>
-
             <div class="card">
                 <h3>Enter Round Data</h3>
                 <p class="rules-hint">Bids: 0 to <span id="bid-max">0</span> tricks (total cannot equal <span id="tricks-total">0</span>). Tricks: total must equal <span id="tricks-equal">0</span>.</p>
@@ -77,6 +71,12 @@
 
             <button onclick="submitRound()" class="btn btn-primary">Submit Round</button>
             <button onclick="undoLastRound()" class="btn btn-warning" id="undo-btn" style="display:none;">Undo Last Round</button>
+
+            <!-- Current Scores Display -->
+            <div class="current-scores-container">
+                <h3 class="current-scores-label">Current Standings</h3>
+                <div id="current-scores" class="current-scores"></div>
+            </div>
 
             <!-- Scorecard -->
             <div class="card scorecard">

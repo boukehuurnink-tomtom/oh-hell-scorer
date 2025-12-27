@@ -421,13 +421,13 @@ function buildRoundRows(round, players, cumulativeScores, roundIndex) {
         p => round.bids[p] + (p === round.dealer ? ' 🂠' : ''), 
         p => p === round.dealer);
     const wonRow = buildRow('<em>Won</em>', players, p => round.tricks[p]);
-    const scoreRow = buildRow('<em>Score</em>', players, 
+    const scoreRow = buildRow(`<em>Points R${round.round_num}</em>`, players, 
         p => formatScore(round.round_scores[p]), 
         null, 
         p => round.round_scores[p] >= 0 ? 'positive-score' : 'negative-score');
     
     // Add cumulative row showing running total
-    const cumulativeRow = buildRow('<em>Total</em>', players,
+    const cumulativeRow = buildRow(`<em>Running Total (after R${round.round_num})</em>`, players,
         p => cumulativeScores[p][roundIndex],
         null,
         p => cumulativeScores[p][roundIndex] >= 0 ? 'positive-score' : 'negative-score');

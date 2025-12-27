@@ -262,6 +262,7 @@ select:focus {
 
 /* Current Scores Display */
 .current-scores-container {
+    margin-top: 24px;
     margin-bottom: 20px;
 }
 
