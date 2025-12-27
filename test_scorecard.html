@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Scorecard</title>
+</head>
+<body>
+    <h1>Testing Scorecard</h1>
+    <div id="result"></div>
+    
+    <script>
+        // Test the scorecard API
+        fetch('http://127.0.0.1:8888/api/game_state')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            })
+            .catch(e => {
+                document.getElementById('result').innerHTML = '<p style="color:red">Error: ' + e + '</p>';
+            });
+    </script>
+</body>
+</html>

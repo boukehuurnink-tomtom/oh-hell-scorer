@@ -642,7 +642,7 @@ async function viewHistoryGame(gameId) {
         scoresContainer.innerHTML = scoreItems;
         
         // Build and display scorecard
-        const tableHTML = buildScorecardTable(game);
+        const tableHTML = buildHistoryScorecardTable(game);
         document.getElementById('scorecard-table').innerHTML = tableHTML;
         
     } catch (error) {
@@ -651,7 +651,7 @@ async function viewHistoryGame(gameId) {
     }
 }
 
-function buildScorecardTable(game) {
+function buildHistoryScorecardTable(game) {
     const headerRow = `<tr><th>Round</th>${game.players.map(p => `<th>${escapeHtml(p)}</th>`).join('')}</tr>`;
     
     // Calculate cumulative scores
