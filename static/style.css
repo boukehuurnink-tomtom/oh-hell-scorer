@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #fef9f5 0%, #fff5f0 50%, #fef9f5 100%);
     min-height: 100vh;
     padding: 0;
     color: #1a1a1a;
@@ -24,7 +24,10 @@ header {
     text-align: center;
     margin-bottom: 40px;
     padding: 40px 0;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 2px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.2), rgba(255, 165, 0, 0.2), rgba(255, 107, 53, 0.2), transparent) border-box;
+    border-bottom: 2px solid transparent;
 }
 
 .header-content {
@@ -68,9 +71,13 @@ header h1 {
 
 .card {
     background: white;
-    border: 1px solid #e5e7eb;
+    border: 1px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 165, 0, 0.05), transparent) border-box;
+    border: 1px solid rgba(255, 107, 53, 0.15);
     padding: 24px;
     margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(255, 107, 53, 0.05);
 }
 
 .card h2 {
@@ -79,6 +86,16 @@ header h1 {
     margin-bottom: 20px;
     color: #1a1a1a;
     letter-spacing: -0.01em;
+    position: relative;
+    padding-left: 28px;
+}
+
+.card h2::before {
+    content: '🔥';
+    position: absolute;
+    left: 0;
+    font-size: 1rem;
+    opacity: 0.8;
 }
 
 .card h3 {
@@ -86,6 +103,17 @@ header h1 {
     font-weight: 600;
     margin-bottom: 12px;
     color: #1a1a1a;
+    position: relative;
+    padding-left: 24px;
+}
+
+.card h3::before {
+    content: '🔥';
+    position: absolute;
+    left: 0;
+    font-size: 0.875rem;
+    opacity: 0.7;
+}
 }
 
 .player-input {
@@ -161,7 +189,8 @@ input[type="number"] {
 input[type="text"]:focus,
 input[type="number"]:focus {
     outline: none;
-    border-color: #1a1a1a;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 select {
@@ -176,7 +205,8 @@ select {
 
 select:focus {
     outline: none;
-    border-color: #1a1a1a;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 .btn {
@@ -191,17 +221,19 @@ select:focus {
 }
 
 .btn-primary {
-    background: #1a1a1a;
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
     color: white;
-    border: 1px solid #1a1a1a;
+    border: 1px solid #ff6b35;
     width: 100%;
     padding: 12px;
     font-size: 0.9375rem;
+    box-shadow: 0 2px 4px rgba(255, 107, 53, 0.2);
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #000;
-    border-color: #000;
+    background: linear-gradient(135deg, #ff5722 0%, #ff7733 100%);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+    transform: translateY(-1px);
 }
 
 .btn-primary:disabled {
@@ -237,8 +269,8 @@ select:focus {
 
 .btn-warning {
     background: white;
-    color: #dc2626;
-    border: 1px solid #dc2626;
+    color: #ff6b35;
+    border: 1px solid #ff6b35;
     width: 100%;
     padding: 12px;
     margin-top: 8px;
@@ -246,8 +278,9 @@ select:focus {
 }
 
 .btn-warning:hover {
-    background: #dc2626;
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
     color: white;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
 }
 
 .game-header {
@@ -256,7 +289,10 @@ select:focus {
     align-items: flex-start;
     margin-bottom: 24px;
     padding-bottom: 16px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 2px solid transparent;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.2), transparent) border-box;
+    border-bottom: 2px solid transparent;
 }
 
 /* Current Scores Display */
@@ -272,6 +308,16 @@ select:focus {
     margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 0.025em;
+    position: relative;
+    padding-left: 24px;
+}
+
+.current-scores-label::before {
+    content: '🔥';
+    position: absolute;
+    left: 0;
+    font-size: 0.875rem;
+    opacity: 0.8;
 }
 
 .current-scores {
@@ -279,8 +325,9 @@ select:focus {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 8px;
     padding: 16px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #fff5f0 0%, #fef9f5 100%);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    box-shadow: 0 2px 4px rgba(255, 107, 53, 0.08);
 }
 
 .score-item {
@@ -289,12 +336,13 @@ select:focus {
     gap: 8px;
     padding: 12px;
     background: white;
-    border: 1px solid #e5e7eb;
+    border: 1px solid rgba(255, 107, 53, 0.15);
 }
 
 .score-item.dealer {
-    border-color: #1a1a1a;
+    border-color: #ff6b35;
     border-width: 2px;
+    box-shadow: 0 2px 6px rgba(255, 107, 53, 0.15);
 }
 
 .score-player {
@@ -312,11 +360,11 @@ select:focus {
 }
 
 .score-value.positive {
-    color: #059669;
+    color: #ff6b35;
 }
 
 .score-value.negative {
-    color: #dc2626;
+    color: #9ca3af;
 }
 
 .score-value.zero {
@@ -347,21 +395,29 @@ select:focus {
 }
 
 .warning {
-    background: #fef3c7;
-    border: 1px solid #fbbf24;
+    background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
+    border: 1px solid #ff6b35;
     padding: 12px;
     margin-bottom: 12px;
     color: #92400e;
     font-size: 0.875rem;
+    box-shadow: 0 2px 4px rgba(255, 107, 53, 0.1);
 }
 
 .dealer-badge {
-    background: #1a1a1a;
+    background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
     color: white;
-    padding: 2px 6px;
+    padding: 2px 8px;
     font-size: 0.75rem;
     font-weight: 500;
     margin-left: 4px;
+    box-shadow: 0 1px 3px rgba(255, 107, 53, 0.3);
+}
+
+.dealer-badge::before {
+    content: '🔥 ';
+    font-size: 0.7rem;
+}
 }
 
 .dealer-cell {
@@ -405,7 +461,7 @@ select:focus {
     display: table-cell;
     padding: 8px;
     text-align: center;
-    border: 1px solid #e5e7eb;
+    border: 1px solid rgba(255, 107, 53, 0.15);
     vertical-align: middle;
     font-size: 0.875rem;
 }
@@ -418,7 +474,7 @@ select:focus {
 .grid-player {
     font-weight: 500;
     color: #1a1a1a;
-    background: #f9fafb;
+    background: linear-gradient(135deg, #fff5f0 0%, #fef9f5 100%);
     padding: 12px 8px;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -440,16 +496,18 @@ select:focus {
 .grid-input {
     width: 100%;
     padding: 8px;
-    border: 1px solid #d1d5db;
+    border: 1px solid rgba(255, 107, 53, 0.2);
     font-size: 0.9375rem;
     text-align: center;
     font-family: inherit;
     background: white;
+    transition: all 0.2s;
 }
 
 .grid-input:focus {
     outline: none;
-    border-color: #1a1a1a;
+    border-color: #ff6b35;
+    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
 }
 
 .input-row {
@@ -491,7 +549,7 @@ table {
 th, td {
     padding: 10px 8px;
     text-align: center;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid rgba(255, 107, 53, 0.1);
 }
 
 /* Equal width for all player columns in scorecard */
@@ -508,12 +566,13 @@ td:first-child {
 }
 
 th {
-    background: #f9fafb;
+    background: linear-gradient(135deg, #fff5f0 0%, #fef9f5 100%);
     font-weight: 500;
     color: #374151;
     font-size: 0.8125rem;
     text-transform: uppercase;
     letter-spacing: 0.025em;
+    border-bottom: 2px solid rgba(255, 107, 53, 0.2);
 }
 
 td {
@@ -521,12 +580,13 @@ td {
 }
 
 tr:hover {
-    background: #fafafa;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.02) 0%, transparent 100%);
 }
 
 .total-row {
-    border-top: 2px solid #1a1a1a;
+    border-top: 2px solid #ff6b35;
     font-weight: 600;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 165, 0, 0.05) 100%);
 }
 
 .total-row td {
@@ -535,12 +595,12 @@ tr:hover {
 }
 
 .positive-score {
-    color: #059669;
+    color: #ff6b35;
     font-weight: 500;
 }
 
 .negative-score {
-    color: #dc2626;
+    color: #6b7280;
     font-weight: 500;
 }
 
@@ -555,7 +615,7 @@ tr:has(strong:first-child) td:first-child {
 
 /* Cumulative total rows - slightly emphasized */
 tbody tr:nth-child(4n) {
-    background: #fafafa;
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.03) 0%, transparent 100%);
     font-weight: 500;
 }
 
@@ -906,15 +966,19 @@ header::after {
 
 .score-item:first-child .score-value.positive::after {
     content: '🔥';
-    font-size: 0.75rem;
-    margin-left: 4px;
-    opacity: 0.6;
+    font-size: 1rem;
+    margin-left: 6px;
+    opacity: 0.85;
     animation: flicker 2s ease-in-out infinite;
 }
 
+.score-item:first-child {
+    background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 165, 0, 0.05) 100%);
+}
+
 @keyframes flicker {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 0.4; }
+    0%, 100% { opacity: 0.85; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.1); }
 }
 
 /* Game complete flame celebration */
