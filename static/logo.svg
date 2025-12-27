@@ -2,45 +2,49 @@
   <!-- Background circle -->
   <circle cx="24" cy="24" r="24" fill="#1a1a1a"/>
   
-  <!-- Playing cards arranged in a fan -->
-  <!-- Card 1 (back) - slightly rotated left -->
-  <g transform="translate(10, 14) rotate(-15, 8, 12)">
-    <rect x="0" y="0" width="16" height="22" rx="2" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
-    <rect x="3" y="3" width="10" height="16" rx="1" fill="#d1d5db"/>
+  <!-- Large Impish Devil character - now prominent -->
+  <g transform="translate(14, 6)">
+    <!-- Horns - larger and more visible -->
+    <path d="M 5 7 Q 3 3 6 1" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 15 7 Q 17 3 14 1" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+    
+    <!-- Head - much larger -->
+    <circle cx="10" cy="10" r="7" fill="#dc2626"/>
+    
+    <!-- Eyes - bigger and more expressive -->
+    <circle cx="8" cy="9" r="1.5" fill="#1a1a1a"/>
+    <circle cx="12" cy="9" r="1.5" fill="#1a1a1a"/>
+    <circle cx="8.5" cy="8.5" r="0.6" fill="white"/>
+    <circle cx="12.5" cy="8.5" r="0.6" fill="white"/>
+    
+    <!-- Mischievous smile - wider -->
+    <path d="M 6.5 12 Q 10 14 13.5 12" fill="none" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/>
+    
+    <!-- Tail - more prominent -->
+    <path d="M 14 15 Q 18 17 17 20 L 18 20" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 17 20 L 15.5 19 L 17.5 18" fill="#dc2626"/>
   </g>
   
-  <!-- Card 2 (front - with "OH") - center -->
-  <g transform="translate(16, 12)">
+  <!-- Playing cards - smaller, below devil -->
+  <g transform="translate(8, 28) scale(0.7)">
+    <!-- Card 1 (back) - slightly rotated left -->
+    <g transform="rotate(-15, 8, 12)">
+      <rect x="0" y="0" width="16" height="22" rx="2" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+      <rect x="3" y="3" width="10" height="16" rx="1" fill="#d1d5db"/>
+    </g>
+  </g>
+  
+  <g transform="translate(16, 28) scale(0.7)">
+    <!-- Card 2 (front - with "OH") - center -->
     <rect x="0" y="0" width="16" height="22" rx="2" fill="white" stroke="#374151" stroke-width="1"/>
-    <text x="8" y="15" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="700" fill="#1a1a1a" text-anchor="middle">OH</text>
+    <text x="8" y="14" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">OH</text>
   </g>
   
-  <!-- Card 3 (back) - slightly rotated right -->
-  <g transform="translate(22, 14) rotate(15, 8, 12)">
-    <rect x="0" y="0" width="16" height="22" rx="2" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
-    <rect x="3" y="3" width="10" height="16" rx="1" fill="#d1d5db"/>
-  </g>
-  
-  <!-- Impish Devil character -->
-  <g transform="translate(18, 2)">
-    <!-- Horns -->
-    <path d="M 3 4 Q 2 2 4 1" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round"/>
-    <path d="M 9 4 Q 10 2 8 1" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round"/>
-    
-    <!-- Head -->
-    <circle cx="6" cy="6" r="4" fill="#dc2626"/>
-    
-    <!-- Eyes -->
-    <circle cx="5" cy="5.5" r="0.8" fill="#1a1a1a"/>
-    <circle cx="7" cy="5.5" r="0.8" fill="#1a1a1a"/>
-    <circle cx="5.3" cy="5.3" r="0.3" fill="white"/>
-    <circle cx="7.3" cy="5.3" r="0.3" fill="white"/>
-    
-    <!-- Mischievous smile -->
-    <path d="M 4 7 Q 6 8.5 8 7" fill="none" stroke="#1a1a1a" stroke-width="0.8" stroke-linecap="round"/>
-    
-    <!-- Tail -->
-    <path d="M 8 9 Q 11 10 10 12 L 10.5 12" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-linecap="round"/>
-    <path d="M 10 12 L 9 11.5 L 10.5 11" fill="#dc2626"/>
+  <g transform="translate(24, 28) scale(0.7)">
+    <!-- Card 3 (back) - slightly rotated right -->
+    <g transform="rotate(15, 8, 12)">
+      <rect x="0" y="0" width="16" height="22" rx="2" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+      <rect x="3" y="3" width="10" height="16" rx="1" fill="#d1d5db"/>
+    </g>
   </g>
 </svg>
