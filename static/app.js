@@ -338,12 +338,12 @@ function collectRoundData() {
 }
 
 function handleGameComplete() {
-    alert('Game Complete! 🔥 Check the final scores below.');
+    alert('Game Complete! Check the final scores below.');
     
     // Create game complete indicator with flames
     const completeIndicator = document.createElement('div');
     completeIndicator.className = 'game-complete-indicator';
-    completeIndicator.innerHTML = '<h2>🔥 Game Complete! 🔥</h2><p>Winner takes all the glory!</p>';
+    completeIndicator.innerHTML = '<h2>Game Complete!</h2><p>Winner takes all the glory!</p>';
     
     const roundInfo = document.getElementById('round-info');
     roundInfo.innerHTML = '';

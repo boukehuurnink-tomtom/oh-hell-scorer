@@ -1,0 +1,12 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M8 1C8 1 6.5 3.5 6.5 5.5C6.5 7 7.2 8 8 8C8.8 8 9.5 7 9.5 5.5C9.5 3.5 8 1 8 1Z" fill="#FF6B35" opacity="0.95"/>
+  <path d="M8 3.5C8 3.5 7 5 7 6.2C7 7.2 7.4 8 8 8C8.6 8 9 7.2 9 6.2C9 5 8 3.5 8 3.5Z" fill="#FFA500" opacity="0.85"/>
+  <path d="M8 5.5C8 5.5 7.3 6.5 7.3 7.2C7.3 7.7 7.6 8 8 8C8.4 8 8.7 7.7 8.7 7.2C8.7 6.5 8 5.5 8 5.5Z" fill="#FFD700" opacity="0.75"/>
+  <circle cx="8" cy="6" r="5" fill="url(#flameGlowSmall)" opacity="0.12"/>
+  <defs>
+    <radialGradient id="flameGlowSmall">
+      <stop offset="0%" stop-color="#FF6B35"/>
+      <stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>

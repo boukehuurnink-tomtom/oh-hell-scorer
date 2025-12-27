@@ -1,0 +1,12 @@
+<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10 2C10 2 8 5 8 7.5C8 9.5 8.8 11 10 11C11.2 11 12 9.5 12 7.5C12 5 10 2 10 2Z" fill="#FF6B35" opacity="0.95"/>
+  <path d="M10 4.5C10 4.5 8.8 6.5 8.8 8C8.8 9.3 9.3 10.5 10 10.5C10.7 10.5 11.2 9.3 11.2 8C11.2 6.5 10 4.5 10 4.5Z" fill="#FFA500" opacity="0.85"/>
+  <path d="M10 7C10 7 9.2 8.2 9.2 9C9.2 9.6 9.5 10 10 10C10.5 10 10.8 9.6 10.8 9C10.8 8.2 10 7 10 7Z" fill="#FFD700" opacity="0.75"/>
+  <circle cx="10" cy="7.5" r="6.5" fill="url(#flameGlowMed)" opacity="0.12"/>
+  <defs>
+    <radialGradient id="flameGlowMed">
+      <stop offset="0%" stop-color="#FF6B35"/>
+      <stop offset="100%" stop-color="#FF6B35" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
