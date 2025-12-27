@@ -1,0 +1,36 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="24" cy="24" r="24" fill="#1a1a1a"/>
+  
+  <!-- Playing cards arranged in a fan -->
+  <!-- Card 1 (back) - slightly rotated left -->
+  <g transform="translate(10, 12) rotate(-15, 8, 12)">
+    <rect x="0" y="0" width="16" height="22" rx="2" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+    <rect x="3" y="3" width="10" height="16" rx="1" fill="#d1d5db"/>
+  </g>
+  
+  <!-- Card 2 (front - with "OH") - center -->
+  <g transform="translate(16, 10)">
+    <rect x="0" y="0" width="16" height="22" rx="2" fill="white" stroke="#374151" stroke-width="1"/>
+    <text x="8" y="14" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="700" fill="#1a1a1a" text-anchor="middle">OH</text>
+  </g>
+  
+  <!-- Card 3 (back) - slightly rotated right -->
+  <g transform="translate(22, 12) rotate(15, 8, 12)">
+    <rect x="0" y="0" width="16" height="22" rx="2" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1"/>
+    <rect x="3" y="3" width="10" height="16" rx="1" fill="#d1d5db"/>
+  </g>
+  
+  <!-- Subtle score tally marks at bottom -->
+  <g transform="translate(14, 36)" opacity="0.6">
+    <line x1="0" y1="0" x2="0" y2="4" stroke="white" stroke-width="1.5"/>
+    <line x1="3" y1="0" x2="3" y2="4" stroke="white" stroke-width="1.5"/>
+    <line x1="6" y1="0" x2="6" y2="4" stroke="white" stroke-width="1.5"/>
+    <line x1="9" y1="0" x2="9" y2="4" stroke="white" stroke-width="1.5"/>
+    <line x1="1" y1="0" x2="10" y2="4" stroke="white" stroke-width="1.5"/>
+    
+    <line x1="14" y1="0" x2="14" y2="4" stroke="white" stroke-width="1.5"/>
+    <line x1="17" y1="0" x2="17" y2="4" stroke="white" stroke-width="1.5"/>
+    <line x1="20" y1="0" x2="20" y2="4" stroke="white" stroke-width="1.5"/>
+  </g>
+</svg>

@@ -27,6 +27,23 @@ header {
     border-bottom: 1px solid #e0e0e0;
 }
 
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+}
+
+.header-text {
+    text-align: left;
+}
+
 header h1 {
     font-size: 1.5rem;
     font-weight: 600;
@@ -462,6 +479,15 @@ tbody tr:nth-child(4n) {
 @media (max-width: 600px) {
     body {
         font-size: 14px;
+    }
+    
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .header-content {
+        gap: 12px;
     }
     
     header h1 {
