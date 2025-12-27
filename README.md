@@ -28,6 +28,7 @@ Example: Bid 3, won 3 → +8 points | Bid 2, won 4 → -2 points
 ## Features Implemented
 
 ✅ **3-7 player support** with validation  
+✅ **Configurable game length** - choose max rounds (5, 10, 15, 20) or play full game  
 ✅ **Round progression** - automatically goes up then down  
 ✅ **Dealer rotation** - dealer changes each round  
 ✅ **"Screw the dealer" rule** - prevents total bids = total tricks  
@@ -37,7 +38,8 @@ Example: Bid 3, won 3 → +8 points | Bid 2, won 4 → -2 points
 ✅ **Auto-complete detection** - knows when game ends  
 ✅ **Visual dealer indicator** - highlights current dealer  
 ✅ **Live warnings** - alerts if dealer rule violated  
-✅ **Game state persistence** - survives browser refresh (session-based)
+✅ **Game state persistence** - survives browser refresh (session-based)  
+✅ **Undo last round** - fix mistakes by undoing and re-entering the last round
 
 ## Quick Start
 
@@ -63,14 +65,16 @@ Example: Bid 3, won 3 → +8 points | Bid 2, won 4 → -2 points
 ## How to Use
 
 1. **Setup**: Enter player names and click "Add Player" for each
-2. **Start Game**: Click "Start Game" when all players are added
-3. **Each Round**:
+2. **Choose Game Length**: Select maximum rounds (optional) or leave as "Full Game"
+3. **Start Game**: Click "Start Game" when all players are added
+4. **Each Round**:
    - Enter each player's bid (predicted tricks)
    - Enter actual tricks won
    - Click "Submit Round"
-4. **View Scores**: Scorecard updates automatically showing all rounds and totals
-5. **Game Persistence**: Your game is automatically saved - refresh the page anytime and continue where you left off
-6. **New Game**: Click "New Game" button to start fresh (this will clear the current game)
+5. **View Scores**: Scorecard updates automatically showing all rounds and totals
+6. **Fix Mistakes**: Click "Undo Last Round" to correct errors (form pre-fills with previous values)
+7. **Game Persistence**: Your game is automatically saved - refresh the page anytime and continue where you left off
+8. **New Game**: Click "New Game" button to start fresh (this will clear the current game)
 
 ## Example Scoring
 
@@ -92,4 +96,6 @@ Round 2:
 📊 Live scorecard with complete game history  
 🎨 Color-coded positive/negative scores  
 💾 Automatic game state persistence  
+⏪ Undo functionality for fixing mistakes  
+⚙️ Configurable game length  
 🔄 Easy game reset to start new games
