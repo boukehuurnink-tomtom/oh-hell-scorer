@@ -9,10 +9,11 @@ def test_undo():
     """Test the undo feature."""
     print("Testing undo feature...\n")
     
-    # Create game with 3 players, max 5 rounds
-    game = OhHellGame(["Alice", "Bob", "Carol"], max_rounds=5)
-    print(f"Game created with max {game.max_rounds} rounds")
-    print(f"Total rounds in sequence: {len(game.round_sequence)}\n")
+    # Create game with 3 players, max 5 cards
+    game = OhHellGame(["Alice", "Bob", "Carol"], max_cards=5)
+    print(f"Game created with max {game.max_cards} cards")
+    print(f"Total rounds in sequence: {len(game.round_sequence)}")
+    print(f"Round sequence: {game.round_sequence}\n")
     
     # Add first round
     game.add_round(

@@ -111,12 +111,12 @@ async function startGame() {
     }
     
     try {
-        const maxRoundsSelect = document.getElementById('max-rounds-select');
-        const maxRounds = maxRoundsSelect.value ? parseInt(maxRoundsSelect.value) : null;
+        const maxCardsSelect = document.getElementById('max-cards-select');
+        const maxCards = maxCardsSelect.value ? parseInt(maxCardsSelect.value) : null;
         
         const data = await fetchApi('/api/new_game', { 
             players: gameState.players,
-            max_rounds: maxRounds
+            max_cards: maxCards
         });
         
         gameState.handSize = data.hand_size;

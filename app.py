@@ -27,19 +27,18 @@ def index():
 def new_game():
     """Create a new game with the specified players."""
     players = request.json.get('players', [])
-    max_rounds = request.json.get('max_rounds', None)
+    max_cards = request.json.get('max_cards', None)
     
     if error := _validate_player_count(players):
         return jsonify({'error': error}), 400
     
-    game_id = _create_game(players, max_rounds)
+    game_id = _create_game(players, max_cards)
     game = games[game_id]
     
     return jsonify({
         'game_id': game_id,
         'players': players,
         'max_cards': game.max_cards,
-        'max_rounds': game.max_rounds,
         'total_rounds': len(game.round_sequence),
         'hand_size': game.get_current_hand_size(),
         'dealer': game.get_current_dealer()
@@ -90,7 +89,6 @@ def game_state():
         'hand_size': hand_size,
         'dealer': game.get_current_dealer() if hand_size else None,
         'max_cards': game.max_cards,
-        'max_rounds': game.max_rounds,
         'total_rounds': len(game.round_sequence),
         'game_complete': hand_size is None
     })
@@ -139,10 +137,10 @@ def _validate_player_count(players):
     return None
 
 
-def _create_game(players, max_rounds=None):
+def _create_game(players, max_cards=None):
     """Create a new game and store it in the session."""
     game_id = secrets.token_hex(8)
-    games[game_id] = OhHellGame(players, max_rounds)
+    games[game_id] = OhHellGame(players, max_cards)
     session['game_id'] = game_id
     return game_id
 

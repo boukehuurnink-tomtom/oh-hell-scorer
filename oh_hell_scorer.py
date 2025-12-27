@@ -5,28 +5,28 @@ Tracks bids and actual tricks for the Oh Hell card game and calculates scores.
 """
 
 class OhHellGame:
-    def __init__(self, player_names, max_rounds=None):
-        """Initialize a new Oh Hell game with player names and optional max rounds."""
+    def __init__(self, player_names, max_cards=None):
+        """Initialize a new Oh Hell game with player names and optional max cards."""
         self.players = player_names
         self.rounds = []
         self.scores = {player: 0 for player in player_names}
         self.num_players = len(player_names)
-        self.max_cards = (52 // self.num_players) - 1
+        
+        # Calculate default max cards based on deck size
+        default_max_cards = (52 // self.num_players) - 1
+        
+        # Use user-specified max_cards if provided, otherwise use default
+        self.max_cards = max_cards if max_cards is not None else default_max_cards
+        
         self.current_round_num = 1
         self.dealer_index = 0
-        self.max_rounds = max_rounds  # User-specified maximum rounds
         self.round_sequence = self._generate_round_sequence()
     
     def _generate_round_sequence(self):
         """Generate the sequence of cards per round (up and down)."""
         ascending = list(range(1, self.max_cards + 1))
         descending = list(range(self.max_cards - 1, 0, -1))
-        full_sequence = ascending + descending
-        
-        # Limit to max_rounds if specified
-        if self.max_rounds and self.max_rounds < len(full_sequence):
-            return full_sequence[:self.max_rounds]
-        return full_sequence
+        return ascending + descending
     
     def get_current_hand_size(self):
         """Get the number of cards for the current round."""

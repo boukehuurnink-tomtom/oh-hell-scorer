@@ -24,16 +24,16 @@
                         <button onclick="addPlayer()" class="btn btn-secondary">Add Player</button>
                     </div>
                 </div>
-                <div class="max-rounds-input">
-                    <label for="max-rounds-select">Maximum Rounds:</label>
-                    <select id="max-rounds-select">
-                        <option value="">Full Game (Up and Down)</option>
-                        <option value="5">5 Rounds</option>
-                        <option value="10">10 Rounds</option>
-                        <option value="15">15 Rounds</option>
-                        <option value="20">20 Rounds</option>
+                <div class="max-cards-input">
+                    <label for="max-cards-select">Maximum Cards per Hand:</label>
+                    <select id="max-cards-select">
+                        <option value="">Default (based on players)</option>
+                        <option value="5">5 Cards</option>
+                        <option value="7">7 Cards</option>
+                        <option value="10">10 Cards</option>
+                        <option value="12">12 Cards</option>
                     </select>
-                    <p class="hint">Choose how many rounds to play, or leave as full game</p>
+                    <p class="hint">Choose the highest number of cards to reach, or use default</p>
                 </div>
                 <button onclick="startGame()" class="btn btn-primary" id="start-game-btn" disabled>Start Game</button>
             </div>
