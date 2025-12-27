@@ -27,17 +27,19 @@ def index():
 def new_game():
     """Create a new game with the specified players."""
     players = request.json.get('players', [])
+    max_rounds = request.json.get('max_rounds', None)
     
     if error := _validate_player_count(players):
         return jsonify({'error': error}), 400
     
-    game_id = _create_game(players)
+    game_id = _create_game(players, max_rounds)
     game = games[game_id]
     
     return jsonify({
         'game_id': game_id,
         'players': players,
         'max_cards': game.max_cards,
+        'max_rounds': game.max_rounds,
         'total_rounds': len(game.round_sequence),
         'hand_size': game.get_current_hand_size(),
         'dealer': game.get_current_dealer()
@@ -88,9 +90,34 @@ def game_state():
         'hand_size': hand_size,
         'dealer': game.get_current_dealer() if hand_size else None,
         'max_cards': game.max_cards,
+        'max_rounds': game.max_rounds,
         'total_rounds': len(game.round_sequence),
         'game_complete': hand_size is None
     })
+
+
+@app.route('/api/undo_round', methods=['POST'])
+def undo_round():
+    """Undo the last round."""
+    game = _get_current_game()
+    if isinstance(game, tuple):  # Error response
+        return game
+    
+    try:
+        last_round = game.undo_last_round()
+        hand_size = game.get_current_hand_size()
+        
+        return jsonify({
+            'success': True,
+            'last_round': last_round,
+            'scores': game.get_current_scores(),
+            'rounds': game.rounds,
+            'hand_size': hand_size,
+            'dealer': game.get_current_dealer() if hand_size else None,
+            'current_round': game.current_round_num
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
 
 
 @app.route('/api/reset', methods=['POST'])
@@ -112,10 +139,10 @@ def _validate_player_count(players):
     return None
 
 
-def _create_game(players):
+def _create_game(players, max_rounds=None):
     """Create a new game and store it in the session."""
     game_id = secrets.token_hex(8)
-    games[game_id] = OhHellGame(players)
+    games[game_id] = OhHellGame(players, max_rounds)
     session['game_id'] = game_id
     return game_id
 

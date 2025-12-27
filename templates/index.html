@@ -24,6 +24,17 @@
                         <button onclick="addPlayer()" class="btn btn-secondary">Add Player</button>
                     </div>
                 </div>
+                <div class="max-rounds-input">
+                    <label for="max-rounds-select">Maximum Rounds:</label>
+                    <select id="max-rounds-select">
+                        <option value="">Full Game (Up and Down)</option>
+                        <option value="5">5 Rounds</option>
+                        <option value="10">10 Rounds</option>
+                        <option value="15">15 Rounds</option>
+                        <option value="20">20 Rounds</option>
+                    </select>
+                    <p class="hint">Choose how many rounds to play, or leave as full game</p>
+                </div>
                 <button onclick="startGame()" class="btn btn-primary" id="start-game-btn" disabled>Start Game</button>
             </div>
         </div>
@@ -55,6 +66,7 @@
             </div>
 
             <button onclick="submitRound()" class="btn btn-primary">Submit Round</button>
+            <button onclick="undoLastRound()" class="btn btn-warning" id="undo-btn" style="display:none;">Undo Last Round</button>
 
             <!-- Scorecard -->
             <div class="card scorecard">

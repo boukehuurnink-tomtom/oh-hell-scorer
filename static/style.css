@@ -64,6 +64,27 @@ header h1 {
     margin-bottom: 20px;
 }
 
+.max-rounds-input {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 8px;
+}
+
+.max-rounds-input label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #667eea;
+}
+
+.max-rounds-input .hint {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
+}
+
 #player-list {
     margin-bottom: 15px;
 }
@@ -158,6 +179,21 @@ input[type="number"]:focus {
 .btn-small:hover {
     background: #667eea;
     color: white;
+}
+
+.btn-warning {
+    background: #ff9800;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    font-size: 1em;
+}
+
+.btn-warning:hover {
+    background: #f57c00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .game-header {

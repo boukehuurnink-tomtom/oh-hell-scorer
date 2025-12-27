@@ -49,10 +49,12 @@ async function restoreGameState() {
                 setupRoundInputs();
                 updateGameInfo();
                 updateScorecard();
+                updateUndoButton();
             } else if (data.rounds && data.rounds.length > 0) {
                 // Game is complete, show game screen with results
                 switchScreen('setup-screen', 'game-screen');
                 updateScorecard();
+                updateUndoButton();
             }
         }
     } catch (error) {
@@ -109,7 +111,13 @@ async function startGame() {
     }
     
     try {
-        const data = await fetchApi('/api/new_game', { players: gameState.players });
+        const maxRoundsSelect = document.getElementById('max-rounds-select');
+        const maxRounds = maxRoundsSelect.value ? parseInt(maxRoundsSelect.value) : null;
+        
+        const data = await fetchApi('/api/new_game', { 
+            players: gameState.players,
+            max_rounds: maxRounds
+        });
         
         gameState.handSize = data.hand_size;
         gameState.dealer = data.dealer;
@@ -238,6 +246,7 @@ async function submitRound() {
         }
         
         updateScorecard();
+        updateUndoButton();
     } catch (error) {
         alert('Error: ' + error.message);
     }
@@ -355,7 +364,16 @@ function buildRoundRows(round, players) {
         p => formatScore(round.round_scores[p]), 
         null, 
         p => round.round_scores[p] >= 0 ? 'positive-score' : 'negative-score');
-    return bidRow + wonRow + scoreRow;
+    
+    // Calculate cumulative scores up to this round
+    const cumulativeRow = buildCumulativeRow(round.round_num, players);
+    
+    return bidRow + wonRow + scoreRow + cumulativeRow;
+}
+
+function buildCumulativeRow(roundNum, players) {
+    // This will be populated with cumulative data from the game state
+    return ''; // Cumulative is shown in total row
 }
 
 function buildRow(label, players, valueFunc, highlightFunc = null, classFunc = null) {
@@ -379,6 +397,53 @@ function buildTotalRow(players, scores) {
 
 function formatScore(score) {
     return score > 0 ? `+${score}` : score;
+}
+
+function updateUndoButton() {
+    const undoBtn = document.getElementById('undo-btn');
+    // Show undo button only if there are rounds to undo
+    fetchApi('/api/game_state').then(data => {
+        if (data.rounds && data.rounds.length > 0) {
+            undoBtn.style.display = 'block';
+        } else {
+            undoBtn.style.display = 'none';
+        }
+    }).catch(() => {
+        undoBtn.style.display = 'none';
+    });
+}
+
+async function undoLastRound() {
+    if (!confirm('Undo the last round? You can re-enter the scores.')) return;
+    
+    try {
+        const data = await fetchApi('/api/undo_round', {});
+        
+        // Update game state
+        gameState.currentRound = data.current_round;
+        gameState.handSize = data.hand_size;
+        gameState.dealer = data.dealer;
+        
+        // Pre-populate the form with the undone round data
+        const lastRound = data.last_round;
+        gameState.players.forEach(player => {
+            const safeId = getSafeId(player);
+            const bidInput = document.getElementById(`bid-${safeId}`);
+            const trickInput = document.getElementById(`trick-${safeId}`);
+            
+            if (bidInput) bidInput.value = lastRound.bids[player];
+            if (trickInput) trickInput.value = lastRound.tricks[player];
+        });
+        
+        // Update UI
+        updateGameInfo();
+        updateScorecard();
+        updateUndoButton();
+        
+        alert('Last round undone. Scores are pre-filled for editing.');
+    } catch (error) {
+        alert('Error undoing round: ' + error.message);
+    }
 }
 
 async function resetGame() {

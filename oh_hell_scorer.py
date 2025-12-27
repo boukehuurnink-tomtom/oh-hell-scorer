@@ -5,8 +5,8 @@ Tracks bids and actual tricks for the Oh Hell card game and calculates scores.
 """
 
 class OhHellGame:
-    def __init__(self, player_names):
-        """Initialize a new Oh Hell game with player names."""
+    def __init__(self, player_names, max_rounds=None):
+        """Initialize a new Oh Hell game with player names and optional max rounds."""
         self.players = player_names
         self.rounds = []
         self.scores = {player: 0 for player in player_names}
@@ -14,13 +14,19 @@ class OhHellGame:
         self.max_cards = (52 // self.num_players) - 1
         self.current_round_num = 1
         self.dealer_index = 0
+        self.max_rounds = max_rounds  # User-specified maximum rounds
         self.round_sequence = self._generate_round_sequence()
     
     def _generate_round_sequence(self):
         """Generate the sequence of cards per round (up and down)."""
         ascending = list(range(1, self.max_cards + 1))
         descending = list(range(self.max_cards - 1, 0, -1))
-        return ascending + descending
+        full_sequence = ascending + descending
+        
+        # Limit to max_rounds if specified
+        if self.max_rounds and self.max_rounds < len(full_sequence):
+            return full_sequence[:self.max_rounds]
+        return full_sequence
     
     def get_current_hand_size(self):
         """Get the number of cards for the current round."""
@@ -115,6 +121,26 @@ class OhHellGame:
         """Move to the next round and rotate dealer."""
         self.current_round_num += 1
         self.dealer_index = (self.dealer_index + 1) % self.num_players
+    
+    def undo_last_round(self):
+        """Undo the last round and restore previous state."""
+        if not self.rounds:
+            raise ValueError("No rounds to undo")
+        
+        # Get the last round
+        last_round = self.rounds.pop()
+        
+        # Revert scores
+        for player in self.players:
+            self.scores[player] -= last_round['round_scores'][player]
+        
+        # Go back one round
+        self.current_round_num -= 1
+        
+        # Rotate dealer backwards
+        self.dealer_index = (self.dealer_index - 1) % self.num_players
+        
+        return last_round  # Return the undone round for potential re-editing
     
     def get_current_scores(self):
         """Return current cumulative scores."""
