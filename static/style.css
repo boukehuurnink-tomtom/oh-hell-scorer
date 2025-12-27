@@ -572,3 +572,46 @@ tbody tr:nth-child(4n) {
         font-size: 0.8125rem;
     }
 }
+
+/* Game History Styles */
+.history-games {
+    margin-top: 16px;
+}
+
+.history-item {
+    padding: 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 12px;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9375rem;
+}
+
+.history-winner {
+    font-weight: 500;
+    color: #1a1a1a;
+}
+
+.history-players {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    border-top: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.history-actions {
+    display: flex;
+    gap: 8px;
+}
+
+#history-list {
+    margin-top: 12px;
+}

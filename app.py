@@ -6,6 +6,7 @@ Oh Hell Score Recorder - Web App
 from flask import Flask, render_template, request, jsonify, session
 import secrets
 from oh_hell_scorer import OhHellGame
+import game_history
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -59,6 +60,17 @@ def add_round():
     try:
         game.add_round(bids, tricks)
         hand_size = game.get_current_hand_size()
+        game_complete = hand_size is None
+        
+        # If game is complete, save to history
+        if game_complete:
+            game_data = {
+                'players': game.players,
+                'scores': game.get_current_scores(),
+                'rounds': game.rounds,
+                'max_cards': game.max_cards
+            }
+            history_id = game_history.save_completed_game(game_data)
         
         return jsonify({
             'success': True,
@@ -66,7 +78,7 @@ def add_round():
             'rounds': game.rounds,
             'hand_size': hand_size,
             'dealer': game.get_current_dealer() if hand_size else None,
-            'game_complete': hand_size is None
+            'game_complete': game_complete
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 400
@@ -126,6 +138,30 @@ def reset():
         del games[game_id]
     session.pop('game_id', None)
     return jsonify({'success': True})
+
+
+@app.route('/api/history', methods=['GET'])
+def get_history():
+    """Get list of completed games."""
+    history = game_history.load_game_history()
+    return jsonify({'games': history})
+
+
+@app.route('/api/history/<game_id>', methods=['GET'])
+def get_history_game(game_id):
+    """Get a specific game from history."""
+    game = game_history.get_game_by_id(game_id)
+    if game:
+        return jsonify(game)
+    return jsonify({'error': 'Game not found'}), 404
+
+
+@app.route('/api/history/<game_id>', methods=['DELETE'])
+def delete_history_game(game_id):
+    """Delete a game from history."""
+    if game_history.delete_game(game_id):
+        return jsonify({'success': True})
+    return jsonify({'error': 'Game not found'}), 404
 
 
 def _validate_player_count(players):

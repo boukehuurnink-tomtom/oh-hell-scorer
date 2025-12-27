@@ -137,14 +137,20 @@ async function startGame() {
 }
 
 // Utility Functions
-async function fetchApi(url, body = null) {
+async function fetchApi(url, body = null, method = null) {
     const options = {
-        method: body ? 'POST' : 'GET',
+        method: method || (body ? 'POST' : 'GET'),
         headers: { 'Content-Type': 'application/json' }
     };
     if (body) options.body = JSON.stringify(body);
     
     const response = await fetch(url, options);
+    
+    // Handle empty responses (like DELETE)
+    if (response.status === 204 || response.headers.get('content-length') === '0') {
+        return { success: true };
+    }
+    
     const data = await response.json();
     
     if (!response.ok) {
@@ -533,5 +539,164 @@ async function resetGame() {
         if (submitBtn) submitBtn.style.display = '';
     } catch (error) {
         console.error('Error resetting game:', error);
+    }
+}
+
+// Game History Functions
+async function loadGameHistory() {
+    try {
+        const data = await fetchApi('/api/history');
+        displayGameHistory(data.games);
+    } catch (error) {
+        console.error('Error loading history:', error);
+        alert('Error loading game history');
+    }
+}
+
+function displayGameHistory(games) {
+    const historyList = document.getElementById('history-list');
+    
+    if (!games || games.length === 0) {
+        historyList.innerHTML = '<p class="rules-hint">No completed games yet</p>';
+        return;
+    }
+    
+    let html = '<div class="history-games">';
+    games.forEach(game => {
+        html += `
+            <div class="history-item">
+                <div class="history-header">
+                    <strong>${game.completed_at}</strong>
+                    <span class="history-winner">🏆 ${escapeHtml(game.winner)}</span>
+                </div>
+                <div class="history-players">
+                    ${Object.entries(game.final_scores)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([player, score]) => {
+                            const scoreClass = score >= 0 ? 'positive-score' : 'negative-score';
+                            return `<span class="${scoreClass}">${escapeHtml(player)}: ${score}</span>`;
+                        })
+                        .join(' | ')}
+                </div>
+                <div class="history-actions">
+                    <button onclick="viewHistoryGame('${game.id}')" class="btn btn-small">View Details</button>
+                    <button onclick="deleteHistoryGame('${game.id}')" class="btn btn-small">Delete</button>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    historyList.innerHTML = html;
+}
+
+async function viewHistoryGame(gameId) {
+    try {
+        const game = await fetchApi(`/api/history/${gameId}`);
+        
+        // Create a temporary game state for viewing
+        gameState.players = game.players;
+        gameState.currentRound = game.total_rounds + 1;
+        gameState.handSize = null;
+        gameState.dealer = '';
+        gameState.totalRounds = game.total_rounds;
+        gameState.maxCards = game.max_cards;
+        
+        // Switch to game screen and show scorecard
+        switchScreen('setup-screen', 'game-screen');
+        
+        // Hide input elements
+        const roundInputCard = document.querySelector('.card:has(#round-input-grid)');
+        const submitBtn = document.querySelector('.btn-primary');
+        const undoBtn = document.getElementById('undo-btn');
+        if (roundInputCard) roundInputCard.style.display = 'none';
+        if (submitBtn) submitBtn.style.display = 'none';
+        if (undoBtn) undoBtn.style.display = 'none';
+        
+        // Update round info
+        document.getElementById('round-info').innerHTML = '<h2>Game Complete (History)</h2>';
+        
+        // Show scores
+        const scoresContainer = document.getElementById('current-scores');
+        const scoreItems = game.players.map(player => {
+            const score = game.final_scores[player] || 0;
+            let scoreClass = 'zero';
+            if (score > 0) scoreClass = 'positive';
+            if (score < 0) scoreClass = 'negative';
+            
+            return `
+                <div class="score-item">
+                    <span class="score-player">${escapeHtml(player)}</span>
+                    <span class="score-value ${scoreClass}">${score}</span>
+                </div>
+            `;
+        }).join('');
+        scoresContainer.innerHTML = scoreItems;
+        
+        // Build and display scorecard
+        const tableHTML = buildScorecardTable(game);
+        document.getElementById('scorecard-table').innerHTML = tableHTML;
+        
+    } catch (error) {
+        console.error('Error viewing game:', error);
+        alert('Error loading game details');
+    }
+}
+
+function buildScorecardTable(game) {
+    const headerRow = `<tr><th>Round</th>${game.players.map(p => `<th>${escapeHtml(p)}</th>`).join('')}</tr>`;
+    
+    // Calculate cumulative scores
+    const cumulativeScores = {};
+    game.players.forEach(player => {
+        cumulativeScores[player] = [];
+        let runningTotal = 0;
+        game.rounds.forEach(round => {
+            runningTotal += round.round_scores[player];
+            cumulativeScores[player].push(runningTotal);
+        });
+    });
+    
+    const bodyRows = game.rounds.map((round, index) => {
+        const bidRow = `<tr><td><strong>R${round.round_num} (${round.hand_size} cards)</strong></td>${game.players.map(p => {
+            const isDealer = p === round.dealer;
+            return `<td${isDealer ? ' class="dealer-cell"' : ''}>${round.bids[p]}${isDealer ? ' 🂠' : ''}</td>`;
+        }).join('')}</tr>`;
+        
+        const wonRow = `<tr><td><em>Won</em></td>${game.players.map(p => `<td>${round.tricks[p]}</td>`).join('')}</tr>`;
+        
+        const scoreRow = `<tr><td><em>Points R${round.round_num}</em></td>${game.players.map(p => {
+            const score = round.round_scores[p];
+            const cssClass = score >= 0 ? 'positive-score' : 'negative-score';
+            return `<td class="${cssClass}">${score > 0 ? '+' + score : score}</td>`;
+        }).join('')}</tr>`;
+        
+        const cumulativeRow = `<tr><td><em>Running Total (after R${round.round_num})</em></td>${game.players.map(p => {
+            const total = cumulativeScores[p][index];
+            const cssClass = total >= 0 ? 'positive-score' : 'negative-score';
+            return `<td class="${cssClass}">${total}</td>`;
+        }).join('')}</tr>`;
+        
+        return bidRow + wonRow + scoreRow + cumulativeRow;
+    }).join('');
+    
+    const totalRow = `<tr class="total-row"><td><strong>TOTAL</strong></td>${game.players.map(p => {
+        const score = game.final_scores[p];
+        const cssClass = score >= 0 ? 'positive-score' : 'negative-score';
+        return `<td class="${cssClass}">${score}</td>`;
+    }).join('')}</tr>`;
+    
+    return `<table>${headerRow}${bodyRows}${totalRow}</table>`;
+}
+
+async function deleteHistoryGame(gameId) {
+    if (!confirm('Delete this game from history?')) return;
+    
+    try {
+        await fetchApi(`/api/history/${gameId}`, {}, 'DELETE');
+        loadGameHistory();  // Refresh the list
+    } catch (error) {
+        console.error('Error deleting game:', error);
+        alert('Error deleting game');
     }
 }
