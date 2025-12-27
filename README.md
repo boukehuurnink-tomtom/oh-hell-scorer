@@ -28,7 +28,7 @@ Example: Bid 3, won 3 → +8 points | Bid 2, won 4 → -2 points
 ## Features Implemented
 
 ✅ **3-7 player support** with validation  
-✅ **Configurable game length** - choose max rounds (5, 10, 15, 20) or play full game  
+✅ **Configurable max cards** - choose max cards per hand (5, 7, 10, 12) or use default based on players  
 ✅ **Round progression** - automatically goes up then down  
 ✅ **Dealer rotation** - dealer changes each round  
 ✅ **"Screw the dealer" rule** - prevents total bids = total tricks  
@@ -65,7 +65,7 @@ Example: Bid 3, won 3 → +8 points | Bid 2, won 4 → -2 points
 ## How to Use
 
 1. **Setup**: Enter player names and click "Add Player" for each
-2. **Choose Game Length**: Select maximum rounds (optional) or leave as "Full Game"
+2. **Choose Max Cards**: Select maximum cards per hand (optional) or use default
 3. **Start Game**: Click "Start Game" when all players are added
 4. **Each Round**:
    - Enter each player's bid (predicted tricks)
@@ -97,5 +97,5 @@ Round 2:
 🎨 Color-coded positive/negative scores  
 💾 Automatic game state persistence  
 ⏪ Undo functionality for fixing mistakes  
-⚙️ Configurable game length  
+⚙️ Configurable max cards per hand  
 🔄 Easy game reset to start new games
