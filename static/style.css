@@ -265,6 +265,15 @@ select:focus {
     margin-bottom: 20px;
 }
 
+.current-scores-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
 .current-scores {
     display: flex;
     gap: 8px;
