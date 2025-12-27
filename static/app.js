@@ -186,24 +186,6 @@ function setupRoundInputs() {
     });
     gridHTML += '</div>';
     
-    // Bid row (read-only display, filled after submission)
-    gridHTML += '<div class="grid-row">';
-    gridHTML += '<div class="grid-label">Bid</div>';
-    gameState.players.forEach(player => {
-        const safeId = getSafeId(player);
-        gridHTML += `<div class="grid-cell" id="bid-display-${safeId}">—</div>`;
-    });
-    gridHTML += '</div>';
-    
-    // Tricks row (read-only display, filled after submission)
-    gridHTML += '<div class="grid-row">';
-    gridHTML += '<div class="grid-label">Won</div>';
-    gameState.players.forEach(player => {
-        const safeId = getSafeId(player);
-        gridHTML += `<div class="grid-cell" id="trick-display-${safeId}">—</div>`;
-    });
-    gridHTML += '</div>';
-    
     // Input row for bids
     gridHTML += '<div class="grid-row grid-input-row">';
     gridHTML += '<div class="grid-label">Bid →</div>';
