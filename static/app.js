@@ -314,9 +314,14 @@ function collectRoundData() {
 function handleGameComplete() {
     alert('Game Complete! Check the final scores below.');
     document.getElementById('round-info').innerHTML = '<h2>Game Complete!</h2>';
-    document.querySelector('.card:has(#bid-inputs)').style.display = 'none';
-    document.querySelector('.card:has(#trick-inputs)').style.display = 'none';
-    document.querySelector('.btn-primary').style.display = 'none';
+    
+    // Hide the round input card
+    const roundInputCard = document.querySelector('.card:has(#round-input-grid)');
+    if (roundInputCard) roundInputCard.style.display = 'none';
+    
+    // Hide submit button
+    const submitBtn = document.querySelector('.btn-primary');
+    if (submitBtn) submitBtn.style.display = 'none';
 }
 
 function handleNextRound(data) {
@@ -324,7 +329,8 @@ function handleNextRound(data) {
     gameState.handSize = data.hand_size;
     gameState.dealer = data.dealer;
     
-    clearInputs();
+    // Regenerate the grid with new dealer and hand size
+    setupRoundInputs();
     updateGameInfo();
     focusFirstInput();
 }
@@ -335,20 +341,9 @@ function clearInputs() {
         const bidInput = document.getElementById(`bid-${safeId}`);
         const trickInput = document.getElementById(`trick-${safeId}`);
         
-        if (bidInput) {
-            bidInput.value = '';
-            bidInput.max = gameState.handSize;
-            bidInput.placeholder = '0';
-        }
-        if (trickInput) {
-            trickInput.value = '';
-            trickInput.max = gameState.handSize;
-            trickInput.placeholder = '0';
-        }
+        if (bidInput) bidInput.value = '';
+        if (trickInput) trickInput.value = '';
     });
-    
-    // Also need to regenerate the grid to update dealer badge
-    setupRoundInputs();
 }
 
 function focusFirstInput() {
@@ -510,12 +505,10 @@ async function resetGame() {
         document.getElementById('player-name-input').value = '';
         document.getElementById('start-game-btn').disabled = true;
         
-        // Show the input cards again in case they were hidden (game complete)
-        const bidCard = document.querySelector('.card:has(#bid-inputs)');
-        const trickCard = document.querySelector('.card:has(#trick-inputs)');
+        // Show the input card again in case it was hidden (game complete)
+        const roundInputCard = document.querySelector('.card:has(#round-input-grid)');
         const submitBtn = document.querySelector('.btn-primary');
-        if (bidCard) bidCard.style.display = '';
-        if (trickCard) trickCard.style.display = '';
+        if (roundInputCard) roundInputCard.style.display = '';
         if (submitBtn) submitBtn.style.display = '';
     } catch (error) {
         console.error('Error resetting game:', error);
