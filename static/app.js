@@ -318,13 +318,9 @@ function collectRoundData() {
         const bidValue = document.getElementById(`bid-${safeId}`).value;
         const trickValue = document.getElementById(`trick-${safeId}`).value;
         
-        if (bidValue === '' || trickValue === '') {
-            alert('Please enter all bids and tricks');
-            return {};
-        }
-        
-        bids[player] = parseInt(bidValue);
-        tricks[player] = parseInt(trickValue);
+        // Default to 0 if empty
+        bids[player] = bidValue === '' ? 0 : parseInt(bidValue);
+        tricks[player] = trickValue === '' ? 0 : parseInt(trickValue);
     }
     
     // Validate tricks
