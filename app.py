@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, jsonify, session
 import secrets
 from oh_hell_scorer import OhHellGame
 import game_history
+import game_state
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
@@ -16,6 +17,24 @@ games = {}
 
 MIN_PLAYERS = 3
 MAX_PLAYERS = 7
+
+# Load persisted game on startup
+def load_persisted_game():
+    """Load game state from disk on app startup."""
+    saved_state = game_state.load_game_state()
+    if saved_state:
+        game_id = saved_state.get('game_id')
+        if game_id:
+            # Recreate the game object
+            game = OhHellGame(saved_state['players'], saved_state.get('max_cards'))
+            # Restore rounds
+            for round_data in saved_state.get('rounds', []):
+                game.add_round(round_data['bids'], round_data['tricks'])
+            games[game_id] = game
+            print(f"Restored game {game_id} with {len(saved_state.get('rounds', []))} rounds")
+
+# Load on startup
+load_persisted_game()
 
 
 @app.route('/')
@@ -35,6 +54,9 @@ def new_game():
     
     game_id = _create_game(players, max_cards)
     game = games[game_id]
+    
+    # Save initial game state
+    _save_current_game_state(game_id, game)
     
     return jsonify({
         'game_id': game_id,
@@ -62,7 +84,12 @@ def add_round():
         hand_size = game.get_current_hand_size()
         game_complete = hand_size is None
         
-        # If game is complete, save to history
+        # Save game state after each round
+        game_id = session.get('game_id')
+        if game_id and not game_complete:
+            _save_current_game_state(game_id, game)
+        
+        # If game is complete, save to history and clear current state
         if game_complete:
             game_data = {
                 'players': game.players,
@@ -71,6 +98,7 @@ def add_round():
                 'max_cards': game.max_cards
             }
             history_id = game_history.save_completed_game(game_data)
+            game_state.clear_game_state()
         
         return jsonify({
             'success': True,
@@ -85,8 +113,25 @@ def add_round():
 
 
 @app.route('/api/game_state', methods=['GET'])
-def game_state():
+def get_game_state():
     """Get the current state of the active game."""
+    # First check if there's a game in memory
+    game_id = session.get('game_id')
+    
+    # If no game in session, try to restore from disk
+    if not game_id or game_id not in games:
+        saved_state = game_state.load_game_state()
+        if saved_state:
+            game_id = saved_state.get('game_id')
+            # Recreate the game object if not in memory
+            if game_id and game_id not in games:
+                game = OhHellGame(saved_state['players'], saved_state.get('max_cards'))
+                # Restore rounds
+                for round_data in saved_state.get('rounds', []):
+                    game.add_round(round_data['bids'], round_data['tricks'])
+                games[game_id] = game
+                session['game_id'] = game_id
+    
     game = _get_current_game()
     if isinstance(game, tuple):  # Error response
         return game
@@ -117,6 +162,11 @@ def undo_round():
         last_round = game.undo_last_round()
         hand_size = game.get_current_hand_size()
         
+        # Save game state after undo
+        game_id = session.get('game_id')
+        if game_id:
+            _save_current_game_state(game_id, game)
+        
         return jsonify({
             'success': True,
             'last_round': last_round,
@@ -137,6 +187,8 @@ def reset():
     if game_id and game_id in games:
         del games[game_id]
     session.pop('game_id', None)
+    # Clear persisted game state
+    game_state.clear_game_state()
     return jsonify({'success': True})
 
 
@@ -187,6 +239,17 @@ def _get_current_game():
     if not game_id or game_id not in games:
         return jsonify({'error': 'No active game'}), 400
     return games[game_id]
+
+
+def _save_current_game_state(game_id, game):
+    """Save the current game state to disk."""
+    state_data = {
+        'game_id': game_id,
+        'players': game.players,
+        'max_cards': game.max_cards,
+        'rounds': game.rounds
+    }
+    game_state.save_game_state(state_data)
 
 
 def _print_startup_message():

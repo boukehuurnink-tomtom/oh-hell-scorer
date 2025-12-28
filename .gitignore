@@ -29,4 +29,7 @@ Thumbs.db
 
 # Environment variables
 .env
+
+# Game data persistence files
 game_history.json
+current_game.json
